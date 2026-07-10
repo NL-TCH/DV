@@ -36,8 +36,12 @@
     this.answerSummary = new KDQ.AnswerSummary({
       sourceTag: root.querySelector('#answerSourceTag'),
       container: root.querySelector('#answerContainer'),
-      markerContainer: root.querySelector('#markerPanel')
+      markerContainer: root.querySelector('#markerPanel'),
+      rationaleContainer: root.querySelector('#rationaleBlock')
     });
+
+    this.layoutEl = root.querySelector('.layout');
+    this.markersPanelSection = root.querySelector('#markersPanelSection');
 
     this.diagram = new KDQ.QuadrantDiagram({
       resultGroup: root.querySelector('#resultGroup'),
@@ -84,6 +88,12 @@
     this.resultText.textContent = KDQ.i18n.tr(relationship.text);
 
     this.diagram.reveal(relationship);
+
+    // Only a researched scenario has a rationale + risk markers to show,
+    // so the third column only appears for that path.
+    var showThirdColumn = meta.source === 'scenario';
+    this.layoutEl.classList.toggle('three-col', showThirdColumn);
+    this.markersPanelSection.classList.toggle('hidden', !showThirdColumn);
   };
 
   App.prototype.restart = function () {
@@ -95,6 +105,8 @@
     this.diagram.reset();
     this.resultView.classList.add('hidden');
     this.questionView.classList.remove('hidden');
+    this.layoutEl.classList.remove('three-col');
+    this.markersPanelSection.classList.add('hidden');
     this.quizView.render();
   };
 

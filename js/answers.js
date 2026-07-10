@@ -1,9 +1,11 @@
 /**
- * AnswerSummary renders what's shown once a result exists:
- * - the left fact sheet: quiz answers, or a scenario's case details
- *   (DV type/explanation is set separately by app.js, shown first).
- * - the right marker panel, next to the quadrant: the scenario's risk
- *   markers (quiz results have none, so the panel stays hidden).
+ * AnswerSummary renders the three places that fill in once a result
+ * exists (quiz results only ever use the left column — the other two
+ * stay hidden since a manual quiz has no rationale or risk markers):
+ * - left: quiz answers, or a scenario's case facts (DV type/explanation
+ *   itself is set separately by app.js, shown above this).
+ * - middle, below the quadrant: the scenario's rationale.
+ * - right, next to the quadrant: the scenario's risk markers.
  */
 (function (KDQ) {
   'use strict';
@@ -12,6 +14,7 @@
     this.sourceTag = dom.sourceTag;
     this.container = dom.container;
     this.markerContainer = dom.markerContainer;
+    this.rationaleContainer = dom.rationaleContainer;
     this._lastMeta = null;
   }
 
@@ -53,6 +56,9 @@
 
     this.markerContainer.innerHTML = '';
     this.markerContainer.classList.add('hidden');
+
+    this.rationaleContainer.innerHTML = '';
+    this.rationaleContainer.classList.add('hidden');
   };
 
   AnswerSummary.prototype._renderScenario = function (scenario) {
@@ -64,7 +70,6 @@
     sheet.appendChild(this._factRow(KDQ.i18n.t('case.breachType'), KDQ.i18n.tr(scenario.breachType)));
     sheet.appendChild(this._factRow(KDQ.i18n.t('case.confidence'), KDQ.i18n.tr(scenario.confidence)));
     sheet.appendChild(this._textBlock(KDQ.i18n.t('case.summary'), KDQ.i18n.tr(scenario.summary)));
-    sheet.appendChild(this._textBlock(KDQ.i18n.t('case.rationale'), KDQ.i18n.tr(scenario.rationale)));
     if (scenario.notes) sheet.appendChild(this._textBlock(KDQ.i18n.t('case.notes'), KDQ.i18n.tr(scenario.notes)));
     if (scenario.sources && scenario.sources.length) sheet.appendChild(this._sourcesRow(scenario.sources));
 
@@ -72,6 +77,7 @@
     this.container.appendChild(sheet);
 
     this._renderMarkerPanel(scenario);
+    this._renderRationalePanel(scenario);
   };
 
   AnswerSummary.prototype._factRow = function (label, value) {
@@ -96,6 +102,14 @@
       '<p class="marker-panel-label">' + KDQ.i18n.t('case.markers') + '</p>' +
       '<div class="marker-tags">' + tags + '</div>';
     this.markerContainer.classList.remove('hidden');
+  };
+
+  /** Renders the scenario's rationale into the block below the quadrant. */
+  AnswerSummary.prototype._renderRationalePanel = function (scenario) {
+    this.rationaleContainer.innerHTML =
+      '<p class="case-fact-label">' + KDQ.i18n.t('case.rationale') + '</p>' +
+      '<p class="case-text">' + KDQ.i18n.tr(scenario.rationale) + '</p>';
+    this.rationaleContainer.classList.remove('hidden');
   };
 
   AnswerSummary.prototype._textBlock = function (label, text) {

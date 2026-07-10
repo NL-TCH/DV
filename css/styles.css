@@ -24,7 +24,7 @@ body{
   line-height:1.5;
 }
 
-.page{max-width:1180px; margin:0 auto; padding:64px 32px 40px;}
+.page{max-width:1180px; margin:0 auto; padding:44px 32px 40px;}
 
 /* ---- topbar: partner logos + language switch ---- */
 .topbar{
@@ -41,12 +41,12 @@ body{
   gap:28px;
 }
 .partner-logo{
-  height:26px;
+  height:34px;
   width:auto;
   display:block;
   object-fit:contain;
 }
-.partner-logo-wide{height:22px;}
+.partner-logo-wide{height:29px;}
 
 .lang-switch{
   display:flex;
@@ -70,17 +70,9 @@ body{
 .lang-btn:focus-visible{outline:2px solid var(--maroon); outline-offset:-2px;}
 
 .hero{
-  padding-bottom:48px;
+  padding-bottom:24px;
   border-bottom:1px solid var(--rule);
-  margin-bottom:56px;
-}
-.eyebrow{
-  font-family:var(--font-mono);
-  font-size:12px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--maroon);
-  margin:0 0 16px;
+  margin-bottom:28px;
 }
 h1{
   font-family:var(--font-display);
@@ -102,8 +94,11 @@ h1{
 .layout{
   display:grid;
   grid-template-columns:minmax(320px,440px) 1fr;
-  gap:56px;
+  gap:40px;
   align-items:start;
+}
+.layout.three-col{
+  grid-template-columns:minmax(300px,400px) minmax(320px,1fr) minmax(240px,300px);
 }
 
 .card{
@@ -118,14 +113,6 @@ h1{
   top:0; left:0; right:0;
   height:3px;
   background:var(--maroon);
-}
-
-.choice-intro{
-  font-family:var(--font-mono);
-  font-size:12px;
-  letter-spacing:.04em;
-  color:var(--muted);
-  margin:0 0 22px;
 }
 
 /* ---- scenario picker ---- */
@@ -411,6 +398,7 @@ button{font-family:var(--font-mono); font-size:13px; letter-spacing:.06em;}
 
 /* ---- diagram panel ---- */
 .diagram-panel .card{padding:36px 36px 28px;}
+.markers-panel .card{padding:32px 28px;}
 .quadrant-wrap{width:100%;}
 #quadrantSvg{width:100%; height:auto; display:block;}
 
@@ -458,10 +446,15 @@ button{font-family:var(--font-mono); font-size:13px; letter-spacing:.06em;}
   flex:0 0 11px;
 }
 
-.marker-panel{
+.rationale-block{
   margin-top:22px;
   padding-top:20px;
   border-top:1px solid var(--rule);
+  text-align:left;
+}
+.rationale-block .case-fact-label{margin:0 0 10px;}
+
+.marker-panel{
   text-align:left;
 }
 .marker-panel-label{
@@ -484,7 +477,7 @@ footer.footnote{
 }
 
 @media (max-width:860px){
-  .layout{grid-template-columns:1fr;}
+  .layout, .layout.three-col{grid-template-columns:1fr;}
   .diagram-panel{order:-1; margin-bottom:8px;}
   .card{padding:28px;}
   .page{padding:40px 20px 32px;}

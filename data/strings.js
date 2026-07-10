@@ -12,20 +12,17 @@ window.KDQ = window.KDQ || {};
 KDQ.STRINGS = {
   "meta.title": { "nl": "Dual Vulnerabilities — kennis-doen kwadrant", "en": "Dual Vulnerabilities — knowing-doing quadrant" },
 
-  "hero.eyebrow": { "nl": "Een interactieve zelfscan", "en": "An interactive self-scan" },
   "hero.title": { "nl": "Dual Vulnerabilities", "en": "Dual Vulnerabilities" },
   "hero.subtitle": { "nl": "Een systemische cyberrisico-lens voor leergerichte post-mortem breach-analyse.", "en": "A systemic cyber-risk lens for learning-oriented post-mortem breach analysis." },
 
-  "choice.intro": { "nl": "Kies één van de twee manieren hieronder — niet allebei nodig.", "en": "Pick one of the two ways below — you don't need both." },
-
   "scenario.heading": { "nl": "Een gedocumenteerde databreach-case", "en": "A documented data-breach case" },
-  "scenario.hint": { "nl": "Kies een van de 16 gedocumenteerde databreaches uit ons onderzoek. De bijbehorende relatie verschijnt direct in het kwadrant.", "en": "Pick one of the 16 documented data breaches from our research. The matching relationship appears in the quadrant immediately." },
+  "scenario.hint": { "nl": "16 gedocumenteerde databreaches — kies er één.", "en": "16 documented data breaches — pick one." },
   "scenario.placeholder": { "nl": "Kies een gedocumenteerde databreach-case…", "en": "Pick a documented data-breach case…" },
 
   "or-divider": { "nl": "of", "en": "or" },
 
   "quiz.heading": { "nl": "De zelfscan", "en": "The self-scan" },
-  "quiz.hint": { "nl": "Beantwoord vier korte vragen over je eigen team of situatie.", "en": "Answer four short questions about your own team or situation." },
+  "quiz.hint": { "nl": "Vier korte vragen over jouw team.", "en": "Four short questions about your team." },
 
   "nav.back": { "nl": "Vorige", "en": "Previous" },
   "nav.next": { "nl": "Volgende", "en": "Next" },

@@ -23,7 +23,6 @@
   </div>
 
   <header class="hero">
-    <p class="eyebrow" data-i18n="hero.eyebrow"></p>
     <h1 data-i18n="hero.title"></h1>
     <p class="subtitle" data-i18n="hero.subtitle"></p>
   </header>
@@ -34,8 +33,6 @@
       <div class="card">
 
         <div id="questionView">
-          <p class="choice-intro" data-i18n="choice.intro"></p>
-
           <div class="scenario-picker">
             <p class="step-heading" data-i18n="scenario.heading"></p>
             <p class="step-hint" data-i18n="scenario.hint"></p>
@@ -108,7 +105,13 @@
           </svg>
         </div>
         <p class="result-tag" id="resultTag"><span class="swatch" id="resultSwatch"></span><span id="resultTagText"></span></p>
-        <div class="marker-panel hidden" id="markerPanel"></div>
+        <div class="rationale-block hidden" id="rationaleBlock"></div>
+      </div>
+    </section>
+
+    <section class="markers-panel hidden" id="markersPanelSection">
+      <div class="card">
+        <div class="marker-panel" id="markerPanel"></div>
       </div>
     </section>
 
