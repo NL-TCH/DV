@@ -5,12 +5,25 @@
 (function (KDQ) {
   'use strict';
 
-  // Centre point of each quadrant cell in the 1100x820 SVG viewBox.
+  /**
+   * Endpoint coordinates in the 1100x820 SVG viewBox. Each quadrant
+   * cell holds 2 points (an "outer" one near the cell's outside edge,
+   * an "inner" one near the centre cross) so that when all 4
+   * relationships are drawn at once (the legend) their dots don't
+   * land on top of each other — a straight relationship (leadership,
+   * expertise-execution) runs outer-to-outer down one column; a
+   * diagonal one (execution, expertise-leadership) runs inner-to-inner
+   * through the centre.
+   */
   KDQ.POSITIONS = {
-    knowingDoctrinal: { x: 422, y: 276 },
-    knowingMaterial: { x: 799, y: 276 },
-    doingDoctrinal: { x: 422, y: 584 },
-    doingMaterial: { x: 799, y: 584 }
+    leadershipTop: { x: 332, y: 276 },
+    leadershipBottom: { x: 332, y: 584 },
+    executionTop: { x: 512, y: 276 },
+    executionBottom: { x: 709, y: 584 },
+    expertiseLeadershipTop: { x: 709, y: 276 },
+    expertiseLeadershipBottom: { x: 512, y: 584 },
+    expertiseExecutionTop: { x: 889, y: 276 },
+    expertiseExecutionBottom: { x: 889, y: 584 }
   };
 
   KDQ.getQuestions = function () {

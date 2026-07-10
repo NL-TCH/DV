@@ -1,11 +1,22 @@
 /**
- * QuadrantDiagram draws the two dots + connecting line for a single
- * relationship onto the static SVG grid, and can reset back to empty.
+ * QuadrantDiagram draws onto the static SVG grid:
+ * - showLegend(): all 4 possible relationships at once, each in its
+ *   own real color — the default/idle view before a result exists.
+ * - reveal(relationship): just the one resolved relationship,
+ *   animated in — replaces the legend once shown.
  */
 (function (KDQ) {
   'use strict';
 
   var SVG_NS = 'http://www.w3.org/2000/svg';
+
+  // The two diagonal relationships (execution, expertise-leadership)
+  // cross at the exact same centre point, so their labels would land
+  // on top of each other at the line's true midpoint. Nudge each away
+  // from centre along its own line instead of using the midpoint.
+  var LEGEND_LABEL_NUDGE = {
+    'expertise-leadership': { x: 0, y: -96 }
+  };
 
   function QuadrantDiagram(options) {
     this.resultGroup = options.resultGroup;
@@ -20,6 +31,61 @@
     this.resultGroup.innerHTML = '';
     this.labelGroup.innerHTML = '';
     this.resultTag.classList.remove('visible');
+  };
+
+  /**
+   * Draws all 4 relationships at once, each in its own real color —
+   * a legend of what every line/dot combination means, so nothing has
+   * to be guessed once a single one is highlighted later.
+   */
+  QuadrantDiagram.prototype.showLegend = function () {
+    this.reset();
+
+    Object.keys(KDQ.CONTENT.relationships).forEach(function (key) {
+      if (key === 'none') return;
+      var relationship = KDQ.getRelationship(key);
+      if (!relationship.from || !relationship.to) return;
+
+      this.resultGroup.appendChild(this._buildLegendLine(relationship));
+      this.resultGroup.appendChild(this._buildLegendDot(relationship.from, relationship.color));
+      this.resultGroup.appendChild(this._buildLegendDot(relationship.to, relationship.color));
+      this.labelGroup.appendChild(this._buildLegendLabel(relationship, key));
+    }, this);
+  };
+
+  QuadrantDiagram.prototype._buildLegendLine = function (relationship) {
+    var line = document.createElementNS(SVG_NS, 'line');
+    line.setAttribute('x1', relationship.from.x);
+    line.setAttribute('y1', relationship.from.y);
+    line.setAttribute('x2', relationship.to.x);
+    line.setAttribute('y2', relationship.to.y);
+    line.setAttribute('stroke', relationship.color);
+    line.setAttribute('stroke-width', 2);
+    if (relationship.dash) line.setAttribute('stroke-dasharray', '7 5 2 5');
+    return line;
+  };
+
+  QuadrantDiagram.prototype._buildLegendDot = function (point, color) {
+    var dot = document.createElementNS(SVG_NS, 'circle');
+    dot.setAttribute('cx', point.x);
+    dot.setAttribute('cy', point.y);
+    dot.setAttribute('r', 11);
+    dot.setAttribute('fill', color);
+    return dot;
+  };
+
+  QuadrantDiagram.prototype._buildLegendLabel = function (relationship, key) {
+    var nudge = LEGEND_LABEL_NUDGE[key] || { x: 0, y: 0 };
+    var midX = (relationship.from.x + relationship.to.x) / 2 + nudge.x;
+    var midY = (relationship.from.y + relationship.to.y) / 2 + nudge.y;
+
+    var text = document.createElementNS(SVG_NS, 'text');
+    text.setAttribute('x', midX);
+    text.setAttribute('y', midY - 16);
+    text.setAttribute('class', 'diagram-label diagram-label-legend');
+    text.style.fill = relationship.color;
+    text.textContent = relationship.label;
+    return text;
   };
 
   QuadrantDiagram.prototype.reveal = function (relationship) {

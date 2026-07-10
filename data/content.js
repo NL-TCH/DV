@@ -532,8 +532,8 @@ KDQ.CONTENT = {
   "relationships": {
     "leadership": {
       "label": "Strategy to Leadership",
-      "from": "knowingDoctrinal",
-      "to": "doingDoctrinal",
+      "from": "leadershipTop",
+      "to": "leadershipBottom",
       "color": "#595959",
       "dash": false,
       "title": "Strategy → Leadership",
@@ -544,8 +544,8 @@ KDQ.CONTENT = {
     },
     "execution": {
       "label": "Strategy to Execution",
-      "from": "knowingDoctrinal",
-      "to": "doingMaterial",
+      "from": "executionTop",
+      "to": "executionBottom",
       "color": "#8c1f28",
       "dash": false,
       "title": "Strategy → Execution",
@@ -556,8 +556,8 @@ KDQ.CONTENT = {
     },
     "expertise-leadership": {
       "label": "Expertise to Leadership",
-      "from": "knowingMaterial",
-      "to": "doingDoctrinal",
+      "from": "expertiseLeadershipTop",
+      "to": "expertiseLeadershipBottom",
       "color": "#9a9a9a",
       "dash": true,
       "title": "Expertise → Leadership",
@@ -568,8 +568,8 @@ KDQ.CONTENT = {
     },
     "expertise-execution": {
       "label": "Expertise to Execution",
-      "from": "knowingMaterial",
-      "to": "doingMaterial",
+      "from": "expertiseExecutionTop",
+      "to": "expertiseExecutionBottom",
       "color": "#595959",
       "dash": false,
       "title": "Expertise → Execution",

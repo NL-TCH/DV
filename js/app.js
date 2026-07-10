@@ -51,9 +51,11 @@
       resultTagText: root.querySelector('#resultTagText')
     });
 
+    this.resultTypeBlock = root.querySelector('#resultTypeBlock');
     this.resultTitle = root.querySelector('#resultTitle');
     this.resultText = root.querySelector('#resultText');
     this.btnRestart = root.querySelector('#btnRestart');
+    this.homeLink = root.querySelector('#homeLink');
 
     this.languageSwitch = new KDQ.LanguageSwitch(root.querySelector('#langSwitch'));
 
@@ -67,10 +69,12 @@
     }.bind(this);
 
     this.btnRestart.addEventListener('click', this.restart.bind(this));
+    this.homeLink.addEventListener('click', this.restart.bind(this));
 
     KDQ.i18n.onChange(this._handleLanguageChange.bind(this));
 
     this._applyDocumentStrings();
+    this.diagram.showLegend();
     this.quizView.render();
   }
 
@@ -84,6 +88,7 @@
     this.resultView.classList.remove('hidden');
 
     this.answerSummary.render(meta);
+    this.resultTypeBlock.classList.remove('hidden');
     this.resultTitle.textContent = relationship.title;
     this.resultText.textContent = KDQ.i18n.tr(relationship.text);
 
@@ -102,9 +107,10 @@
 
     this.engine.reset();
     this.scenarioPicker.reset();
-    this.diagram.reset();
+    this.diagram.showLegend();
     this.resultView.classList.add('hidden');
     this.questionView.classList.remove('hidden');
+    this.resultTypeBlock.classList.add('hidden');
     this.layoutEl.classList.remove('three-col');
     this.markersPanelSection.classList.add('hidden');
     this.quizView.render();

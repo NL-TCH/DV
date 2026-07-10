@@ -14,16 +14,11 @@
 <div class="page">
 
   <div class="topbar">
-    <div class="partner-logos">
-      <img class="partner-logo partner-logo-wide" src="assets/ams-logo.png" alt="Antwerp Management School">
-      <img class="partner-logo" src="assets/ncsc-logo.jpg" alt="NCSC-NL">
-      <img class="partner-logo" src="assets/goudse-logo.png" alt="De Goudse">
-    </div>
     <div class="lang-switch" id="langSwitch"></div>
   </div>
 
   <header class="hero">
-    <h1 data-i18n="hero.title"></h1>
+    <h1><button type="button" class="home-link" id="homeLink" data-i18n="hero.title"></button></h1>
     <p class="subtitle" data-i18n="hero.subtitle"></p>
   </header>
 
@@ -61,11 +56,9 @@
         </div>
 
         <div id="resultView" class="hidden" aria-live="polite">
-          <p class="result-tagline" data-i18n="result.tagline"></p>
-          <h2 class="result-title" id="resultTitle"></h2>
-          <p class="result-text" id="resultText"></p>
+          <p class="answer-summary-tag" id="answerSourceTag"></p>
+          <div class="rationale-block hidden" id="rationaleBlock"></div>
           <div class="answer-summary">
-            <p class="answer-summary-tag" id="answerSourceTag"></p>
             <div id="answerContainer"></div>
           </div>
           <button class="btn btn-ghost" type="button" id="btnRestart" data-i18n="result.restart"></button>
@@ -105,7 +98,10 @@
           </svg>
         </div>
         <p class="result-tag" id="resultTag"><span class="swatch" id="resultSwatch"></span><span id="resultTagText"></span></p>
-        <div class="rationale-block hidden" id="rationaleBlock"></div>
+        <div class="result-type-block hidden" id="resultTypeBlock">
+          <h2 class="result-title" id="resultTitle"></h2>
+          <p class="result-text" id="resultText"></p>
+        </div>
       </div>
     </section>
 
@@ -117,7 +113,14 @@
 
   </main>
 
-  <footer class="footnote" data-i18n="footer.text"></footer>
+  <footer class="footnote">
+    <p class="footnote-text" data-i18n="footer.text"></p>
+    <div class="footer-logos">
+      <img class="partner-logo partner-logo-wide" src="assets/ams-logo.png" alt="Antwerp Management School">
+      <img class="partner-logo" src="assets/ncsc-logo.jpg" alt="NCSC-NL">
+      <img class="partner-logo" src="assets/goudse-logo.png" alt="De Goudse">
+    </div>
+  </footer>
 
 </div>
 

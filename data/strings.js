@@ -29,7 +29,6 @@ KDQ.STRINGS = {
   "nav.seeResult": { "nl": "Bekijk resultaat", "en": "View result" },
   "step.counter": { "nl": "VRAAG", "en": "QUESTION" },
 
-  "result.tagline": { "nl": "Resultaat", "en": "Result" },
   "result.restart": { "nl": "Opnieuw beginnen", "en": "Start over" },
 
   "answers.quizSource": { "nl": "Jouw antwoorden", "en": "Your answers" },
