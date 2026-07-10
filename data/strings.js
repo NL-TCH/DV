@@ -16,14 +16,16 @@ KDQ.STRINGS = {
   "hero.title": { "nl": "Dual Vulnerabilities", "en": "Dual Vulnerabilities" },
   "hero.subtitle": { "nl": "Een systemische cyberrisico-lens voor leergerichte post-mortem breach-analyse.", "en": "A systemic cyber-risk lens for learning-oriented post-mortem breach analysis." },
 
-  "step1.label": { "nl": "Stap 1 — lees eerst een onderzochte case", "en": "Step 1 — read a researched case first" },
-  "step1.hint": { "nl": "Kies een van de 16 gedocumenteerde databreaches uit ons onderzoek. De bijbehorende relatie verschijnt direct in het kwadrant.", "en": "Pick one of the 16 documented data breaches from our research. The matching relationship appears in the quadrant immediately." },
+  "choice.intro": { "nl": "Kies één van de twee manieren hieronder — niet allebei nodig.", "en": "Pick one of the two ways below — you don't need both." },
+
+  "scenario.heading": { "nl": "Een gedocumenteerde databreach-case", "en": "A documented data-breach case" },
+  "scenario.hint": { "nl": "Kies een van de 16 gedocumenteerde databreaches uit ons onderzoek. De bijbehorende relatie verschijnt direct in het kwadrant.", "en": "Pick one of the 16 documented data breaches from our research. The matching relationship appears in the quadrant immediately." },
   "scenario.placeholder": { "nl": "Kies een gedocumenteerde databreach-case…", "en": "Pick a documented data-breach case…" },
 
-  "or-divider": { "nl": "je hoeft maar één van beide te doen", "en": "you only need to do one of the two" },
+  "or-divider": { "nl": "of", "en": "or" },
 
-  "step2.label": { "nl": "Stap 2 — of beantwoord zelf de vragen", "en": "Step 2 — or answer the questions yourself" },
-  "step2.hint": { "nl": "Vul de zelfscan in over je eigen team of situatie.", "en": "Fill in the self-scan for your own team or situation." },
+  "quiz.heading": { "nl": "De zelfscan", "en": "The self-scan" },
+  "quiz.hint": { "nl": "Beantwoord vier korte vragen over je eigen team of situatie.", "en": "Answer four short questions about your own team or situation." },
 
   "nav.back": { "nl": "Vorige", "en": "Previous" },
   "nav.next": { "nl": "Volgende", "en": "Next" },

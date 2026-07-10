@@ -1,7 +1,9 @@
 /**
- * AnswerSummary renders what's shown on the left once a result exists:
- * - quiz path: the question/answer pairs the user picked.
- * - scenario path: a source-cited fact sheet for the researched case.
+ * AnswerSummary renders what's shown once a result exists:
+ * - the left fact sheet: quiz answers, or a scenario's case details
+ *   (DV type/explanation is set separately by app.js, shown first).
+ * - the right marker panel, next to the quadrant: the scenario's risk
+ *   markers (quiz results have none, so the panel stays hidden).
  */
 (function (KDQ) {
   'use strict';
@@ -9,6 +11,7 @@
   function AnswerSummary(dom) {
     this.sourceTag = dom.sourceTag;
     this.container = dom.container;
+    this.markerContainer = dom.markerContainer;
     this._lastMeta = null;
   }
 
@@ -47,6 +50,9 @@
 
     this.container.innerHTML = '';
     this.container.appendChild(list);
+
+    this.markerContainer.innerHTML = '';
+    this.markerContainer.classList.add('hidden');
   };
 
   AnswerSummary.prototype._renderScenario = function (scenario) {
@@ -57,7 +63,6 @@
 
     sheet.appendChild(this._factRow(KDQ.i18n.t('case.breachType'), KDQ.i18n.tr(scenario.breachType)));
     sheet.appendChild(this._factRow(KDQ.i18n.t('case.confidence'), KDQ.i18n.tr(scenario.confidence)));
-    sheet.appendChild(this._markerRow(scenario));
     sheet.appendChild(this._textBlock(KDQ.i18n.t('case.summary'), KDQ.i18n.tr(scenario.summary)));
     sheet.appendChild(this._textBlock(KDQ.i18n.t('case.rationale'), KDQ.i18n.tr(scenario.rationale)));
     if (scenario.notes) sheet.appendChild(this._textBlock(KDQ.i18n.t('case.notes'), KDQ.i18n.tr(scenario.notes)));
@@ -65,6 +70,8 @@
 
     this.container.innerHTML = '';
     this.container.appendChild(sheet);
+
+    this._renderMarkerPanel(scenario);
   };
 
   AnswerSummary.prototype._factRow = function (label, value) {
@@ -74,10 +81,8 @@
     return row;
   };
 
-  AnswerSummary.prototype._markerRow = function (scenario) {
-    var row = document.createElement('div');
-    row.className = 'case-fact';
-
+  /** Renders the scenario's risk markers into the panel next to the quadrant. */
+  AnswerSummary.prototype._renderMarkerPanel = function (scenario) {
     var primary = KDQ.getMarker(scenario.primaryMarker);
     var tags = '<span class="marker-tag marker-tag-primary" title="' + KDQ.i18n.tr(primary.definition) + '">' +
       scenario.primaryMarker + ' — ' + primary.label + '</span>';
@@ -87,8 +92,10 @@
       tags += '<span class="marker-tag" title="' + KDQ.i18n.tr(marker.definition) + '">' + code + ' — ' + marker.label + '</span>';
     });
 
-    row.innerHTML = '<span class="case-fact-label">' + KDQ.i18n.t('case.markers') + '</span><span class="marker-tags">' + tags + '</span>';
-    return row;
+    this.markerContainer.innerHTML =
+      '<p class="marker-panel-label">' + KDQ.i18n.t('case.markers') + '</p>' +
+      '<div class="marker-tags">' + tags + '</div>';
+    this.markerContainer.classList.remove('hidden');
   };
 
   AnswerSummary.prototype._textBlock = function (label, text) {

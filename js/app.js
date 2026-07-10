@@ -35,7 +35,8 @@
 
     this.answerSummary = new KDQ.AnswerSummary({
       sourceTag: root.querySelector('#answerSourceTag'),
-      container: root.querySelector('#answerContainer')
+      container: root.querySelector('#answerContainer'),
+      markerContainer: root.querySelector('#markerPanel')
     });
 
     this.diagram = new KDQ.QuadrantDiagram({

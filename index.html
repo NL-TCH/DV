@@ -34,17 +34,19 @@
       <div class="card">
 
         <div id="questionView">
+          <p class="choice-intro" data-i18n="choice.intro"></p>
+
           <div class="scenario-picker">
-            <p class="step-heading" data-i18n="step1.label"></p>
-            <p class="step-hint" data-i18n="step1.hint"></p>
+            <p class="step-heading" data-i18n="scenario.heading"></p>
+            <p class="step-hint" data-i18n="scenario.hint"></p>
             <select class="scenario-select" id="scenarioSelect"></select>
           </div>
 
           <div class="or-divider"><span data-i18n="or-divider"></span></div>
 
           <div class="step-heading-block">
-            <p class="step-heading" data-i18n="step2.label"></p>
-            <p class="step-hint" data-i18n="step2.hint"></p>
+            <p class="step-heading" data-i18n="quiz.heading"></p>
+            <p class="step-hint" data-i18n="quiz.hint"></p>
           </div>
 
           <div class="quiz-meta">
@@ -63,12 +65,12 @@
 
         <div id="resultView" class="hidden" aria-live="polite">
           <p class="result-tagline" data-i18n="result.tagline"></p>
+          <h2 class="result-title" id="resultTitle"></h2>
+          <p class="result-text" id="resultText"></p>
           <div class="answer-summary">
             <p class="answer-summary-tag" id="answerSourceTag"></p>
             <div id="answerContainer"></div>
           </div>
-          <h2 class="result-title" id="resultTitle"></h2>
-          <p class="result-text" id="resultText"></p>
           <button class="btn btn-ghost" type="button" id="btnRestart" data-i18n="result.restart"></button>
         </div>
 
@@ -106,6 +108,7 @@
           </svg>
         </div>
         <p class="result-tag" id="resultTag"><span class="swatch" id="resultSwatch"></span><span id="resultTagText"></span></p>
+        <div class="marker-panel hidden" id="markerPanel"></div>
       </div>
     </section>
 
