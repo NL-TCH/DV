@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dual Vulnerabilities</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="page">
+
+  <div class="topbar">
+    <div class="partner-logos">
+      <img class="partner-logo partner-logo-wide" src="assets/ams-logo.png" alt="Antwerp Management School">
+      <img class="partner-logo" src="assets/ncsc-logo.jpg" alt="NCSC-NL">
+      <img class="partner-logo" src="assets/goudse-logo.png" alt="De Goudse">
+    </div>
+    <div class="lang-switch" id="langSwitch"></div>
+  </div>
+
+  <header class="hero">
+    <p class="eyebrow" data-i18n="hero.eyebrow"></p>
+    <h1 data-i18n="hero.title"></h1>
+    <p class="subtitle" data-i18n="hero.subtitle"></p>
+  </header>
+
+  <main class="layout">
+
+    <section class="quiz-panel">
+      <div class="card">
+
+        <div id="questionView">
+          <div class="scenario-picker">
+            <p class="step-heading" data-i18n="step1.label"></p>
+            <p class="step-hint" data-i18n="step1.hint"></p>
+            <select class="scenario-select" id="scenarioSelect"></select>
+          </div>
+
+          <div class="or-divider"><span data-i18n="or-divider"></span></div>
+
+          <div class="step-heading-block">
+            <p class="step-heading" data-i18n="step2.label"></p>
+            <p class="step-hint" data-i18n="step2.hint"></p>
+          </div>
+
+          <div class="quiz-meta">
+            <span class="step-label" id="stepLabel"></span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <h2 class="q-title" id="qTitle"></h2>
+          <div class="options" id="qOptions"></div>
+          <div class="nav-row">
+            <button class="btn btn-ghost" type="button" id="btnBack"></button>
+            <button class="btn btn-primary" type="button" id="btnNext" disabled></button>
+          </div>
+        </div>
+
+        <div id="resultView" class="hidden" aria-live="polite">
+          <p class="result-tagline" data-i18n="result.tagline"></p>
+          <div class="answer-summary">
+            <p class="answer-summary-tag" id="answerSourceTag"></p>
+            <div id="answerContainer"></div>
+          </div>
+          <h2 class="result-title" id="resultTitle"></h2>
+          <p class="result-text" id="resultText"></p>
+          <button class="btn btn-ghost" type="button" id="btnRestart" data-i18n="result.restart"></button>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="diagram-panel">
+      <div class="card">
+        <div class="quadrant-wrap">
+          <svg id="quadrantSvg" viewBox="0 0 1100 820" xmlns="http://www.w3.org/2000/svg">
+
+            <!-- column headers -->
+            <text x="248" y="44" class="axis-label-primary">Doctrinal</text>
+            <text x="248" y="70" class="axis-label-secondary">strategy</text>
+
+            <text x="860" y="44" class="axis-label-primary">Material</text>
+            <text x="860" y="70" class="axis-label-secondary">operational</text>
+
+            <!-- row headers -->
+            <text x="20" y="152" class="axis-label-primary">Knowing</text>
+            <text x="20" y="178" class="axis-label-secondary">awareness</text>
+
+            <text x="20" y="768" class="axis-label-primary">Doing</text>
+            <text x="20" y="794" class="axis-label-secondary">behavior</text>
+
+            <!-- static grid -->
+            <rect x="234" y="122" width="754" height="616" fill="none" stroke="var(--grid-line)" stroke-width="1.4"/>
+            <line x1="611" y1="122" x2="611" y2="738" stroke="var(--grid-line)" stroke-width="1.4"/>
+            <line x1="234" y1="430" x2="988" y2="430" stroke="var(--grid-line)" stroke-width="1.4"/>
+
+            <!-- dynamic relationship (filled in by QuadrantDiagram) -->
+            <g id="resultGroup"></g>
+            <g id="resultLabelGroup"></g>
+
+          </svg>
+        </div>
+        <p class="result-tag" id="resultTag"><span class="swatch" id="resultSwatch"></span><span id="resultTagText"></span></p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footnote" data-i18n="footer.text"></footer>
+
+</div>
+
+<script src="data/strings.js"></script>
+<script src="data/content.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/lang-switch.js"></script>
+<script src="js/config.js"></script>
+<script src="js/quadrant.js"></script>
+<script src="js/answers.js"></script>
+<script src="js/scenario.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
