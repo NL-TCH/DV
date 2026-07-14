@@ -388,6 +388,9 @@ button{font-family:var(--font-mono); font-size:13px; letter-spacing:.06em;}
 .quadrant-wrap{width:100%;}
 #quadrantSvg{width:100%; height:auto; display:block;}
 
+.diagram-hint{margin:0 0 20px;}
+.diagram-hint .step-hint{margin-bottom:0;}
+
 .axis-label-primary{
   font-family:var(--font-display);
   font-size:26px;
@@ -413,6 +416,15 @@ button{font-family:var(--font-mono); font-size:13px; letter-spacing:.06em;}
 }
 .diagram-label-legend{
   font-size:15px;
+}
+
+.legend-hit{
+  cursor:pointer;
+  transition:opacity .25s ease;
+}
+.legend-hit:focus-visible{
+  outline:2px solid var(--maroon);
+  outline-offset:3px;
 }
 
 .result-tag{

@@ -20,6 +20,7 @@
     this.questionView = root.querySelector('#questionView');
     this.resultView = root.querySelector('#resultView');
     this._activeRelationshipKey = null;
+    this._previewKey = null;
 
     this.engine = new KDQ.QuizEngine(KDQ.getQuestions());
     this.quizView = new KDQ.QuizView(this.engine, {
@@ -54,6 +55,7 @@
     this.resultTypeBlock = root.querySelector('#resultTypeBlock');
     this.resultTitle = root.querySelector('#resultTitle');
     this.resultText = root.querySelector('#resultText');
+    this.diagramHint = root.querySelector('#diagramHint');
     this.btnRestart = root.querySelector('#btnRestart');
     this.homeLink = root.querySelector('#homeLink');
 
@@ -68,6 +70,8 @@
       this.showResult(scenario.resultKey || 'none', { source: 'scenario', scenario: scenario });
     }.bind(this);
 
+    this.diagram.onSelectRelationship = this._handleLegendPreview.bind(this);
+
     this.btnRestart.addEventListener('click', this.restart.bind(this));
     this.homeLink.addEventListener('click', this.restart.bind(this));
 
@@ -78,9 +82,20 @@
     this.quizView.render();
   }
 
+  /** A legend line/dot/label was clicked on the idle homepage — preview its explanation, no other state changes. */
+  App.prototype._handleLegendPreview = function (relationshipKey) {
+    this._previewKey = relationshipKey;
+
+    var relationship = KDQ.getRelationship(relationshipKey);
+    this.resultTypeBlock.classList.remove('hidden');
+    this.resultTitle.textContent = relationship.title;
+    this.resultText.textContent = KDQ.i18n.tr(relationship.text);
+  };
+
   App.prototype.showResult = function (relationshipKey, meta) {
     this._activeRelationshipKey = relationshipKey;
     this._activeMeta = meta;
+    this._previewKey = null;
 
     var relationship = KDQ.getRelationship(relationshipKey);
 
@@ -91,6 +106,7 @@
     this.resultTypeBlock.classList.remove('hidden');
     this.resultTitle.textContent = relationship.title;
     this.resultText.textContent = KDQ.i18n.tr(relationship.text);
+    this.diagramHint.classList.add('hidden');
 
     this.diagram.reveal(relationship);
 
@@ -104,6 +120,7 @@
   App.prototype.restart = function () {
     this._activeRelationshipKey = null;
     this._activeMeta = null;
+    this._previewKey = null;
 
     this.engine.reset();
     this.scenarioPicker.reset();
@@ -111,6 +128,7 @@
     this.resultView.classList.add('hidden');
     this.questionView.classList.remove('hidden');
     this.resultTypeBlock.classList.add('hidden');
+    this.diagramHint.classList.remove('hidden');
     this.layoutEl.classList.remove('three-col');
     this.markersPanelSection.classList.add('hidden');
     this.quizView.render();
@@ -129,6 +147,8 @@
     if (this._activeRelationshipKey) {
       // Re-render the currently shown result in the new language.
       this.showResult(this._activeRelationshipKey, this._activeMeta);
+    } else if (this._previewKey) {
+      this._handleLegendPreview(this._previewKey);
     } else {
       this.quizView.render();
     }
