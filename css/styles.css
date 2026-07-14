@@ -71,6 +71,7 @@ h1{
   max-width:100%;
   white-space:nowrap;
   overflow-x:auto;
+  overflow-y:hidden;
   letter-spacing:-.01em;
   display:block;
   background:none;
@@ -90,6 +91,7 @@ h1{
   margin:0;
   white-space:nowrap;
   overflow-x:auto;
+  overflow-y:hidden;
 }
 
 .layout{
