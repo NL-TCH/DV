@@ -10,9 +10,9 @@
 window.KDQ = window.KDQ || {};
 
 KDQ.STRINGS = {
-  "meta.title": { "nl": "Dual Vulnerabilities — kennis-doen kwadrant", "en": "Dual Vulnerabilities — knowing-doing quadrant" },
+  "meta.title": { "nl": "Threat analysis by the Dual Vulnerabilities framework", "en": "Threat analysis by the Dual Vulnerabilities framework" },
 
-  "hero.title": { "nl": "Dual Vulnerabilities", "en": "Dual Vulnerabilities" },
+  "hero.title": { "nl": "Threat analysis by the Dual Vulnerabilities framework", "en": "Threat analysis by the Dual Vulnerabilities framework" },
   "hero.subtitle": { "nl": "Een systemische cyberrisico-lens voor leergerichte post-mortem breach-analyse.", "en": "A systemic cyber-risk lens for learning-oriented post-mortem breach analysis." },
 
   "scenario.heading": { "nl": "Een gedocumenteerde databreach-case", "en": "A documented data-breach case" },
