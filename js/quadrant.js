@@ -25,18 +25,24 @@
     this.resultSwatch = options.resultSwatch;
     this.resultTagText = options.resultTagText;
     this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    /** Set by app.js: called with a relationship key when a legend line/dot/label is clicked. */
+    this.onSelectRelationship = null;
+    this._legendElements = {};
   }
 
   QuadrantDiagram.prototype.reset = function () {
     this.resultGroup.innerHTML = '';
     this.labelGroup.innerHTML = '';
     this.resultTag.classList.remove('visible');
+    this._legendElements = {};
   };
 
   /**
    * Draws all 4 relationships at once, each in its own real color —
    * a legend of what every line/dot combination means, so nothing has
-   * to be guessed once a single one is highlighted later.
+   * to be guessed once a single one is highlighted later. Every line,
+   * dot and label is clickable: it dims the other 3 and reports the
+   * pick via onSelectRelationship so app.js can show its explanation.
    */
   QuadrantDiagram.prototype.showLegend = function () {
     this.reset();
@@ -46,11 +52,51 @@
       var relationship = KDQ.getRelationship(key);
       if (!relationship.from || !relationship.to) return;
 
-      this.resultGroup.appendChild(this._buildLegendLine(relationship));
-      this.resultGroup.appendChild(this._buildLegendDot(relationship.from, relationship.color));
-      this.resultGroup.appendChild(this._buildLegendDot(relationship.to, relationship.color));
-      this.labelGroup.appendChild(this._buildLegendLabel(relationship, key));
+      var line = this._buildLegendLine(relationship);
+      var dotFrom = this._buildLegendDot(relationship.from, relationship.color);
+      var dotTo = this._buildLegendDot(relationship.to, relationship.color);
+      var label = this._buildLegendLabel(relationship, key);
+
+      this.resultGroup.appendChild(line);
+      this.resultGroup.appendChild(dotFrom);
+      this.resultGroup.appendChild(dotTo);
+      this.labelGroup.appendChild(label);
+
+      this._legendElements[key] = { line: line, dots: [dotFrom, dotTo], label: label };
+      this._makeLegendItemInteractive([line, dotFrom, dotTo, label], key, relationship.label);
     }, this);
+  };
+
+  QuadrantDiagram.prototype._makeLegendItemInteractive = function (elements, key, label) {
+    var self = this;
+    var select = function () { self._selectLegendRelationship(key); };
+
+    elements.forEach(function (el) {
+      el.classList.add('legend-hit');
+      el.setAttribute('tabindex', '0');
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-label', label);
+      el.addEventListener('click', select);
+      el.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          select();
+        }
+      });
+    });
+  };
+
+  QuadrantDiagram.prototype._selectLegendRelationship = function (key) {
+    var self = this;
+    Object.keys(this._legendElements).forEach(function (otherKey) {
+      var group = self._legendElements[otherKey];
+      var opacity = otherKey === key ? '1' : '0.28';
+      group.line.style.opacity = opacity;
+      group.dots.forEach(function (dot) { dot.style.opacity = opacity; });
+      group.label.style.opacity = opacity;
+    });
+
+    if (typeof this.onSelectRelationship === 'function') this.onSelectRelationship(key);
   };
 
   QuadrantDiagram.prototype._buildLegendLine = function (relationship) {

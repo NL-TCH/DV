@@ -21,6 +21,9 @@ KDQ.STRINGS = {
 
   "or-divider": { "nl": "of", "en": "or" },
 
+  "diagram.heading": { "nl": "Een interactief kwadrant", "en": "An interactive quadrant" },
+  "diagram.hint": { "nl": "Klik op een lijn, bolletje of tekst hieronder voor meer uitleg over dat type DV.", "en": "Click a line, dot or label below to read more about that DV type." },
+
   "quiz.heading": { "nl": "De zelfscan", "en": "The self-scan" },
   "quiz.hint": { "nl": "Vier korte vragen over jouw team.", "en": "Four short questions about your team." },
 
