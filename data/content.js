@@ -109,19 +109,84 @@ KDQ.CONTENT = {
     }
   ],
 
+  /**
+   * knowingDoingQuestion / doctrinalMaterialQuestion: per-marker
+   * self-assessment prompts used by the relevance check (js/relevance.js).
+   * Users rate agreement 1-5; higher means the pattern is more
+   * recognizable within their own organization. "X" has none — it
+   * means no marker was evidenced, so there is nothing to assess.
+   */
   "markers": {
-    "M1": { "label": "Governance / ownership isolation", "definition": { "nl": "Risico-eigenaarschap, accountability of leidinggevend toezicht is versnipperd of afwezig.", "en": "Risk ownership, accountability or leadership supervision is fragmented or absent." } },
-    "M2": { "label": "Generic knowing-doing execution gap", "definition": { "nl": "Een bekende of kenbare controleverwachting wordt geen operationele praktijk.", "en": "A known or knowable control expectation does not become operational practice." } },
-    "M3": { "label": "Expertise / capability constraint", "definition": { "nl": "Specialistische beveiligingskennis bestaat, maar kan niet worden vertaald naar uitvoering door complexiteit, legacy, schaarste of technical debt.", "en": "Specialist security knowledge exists but cannot be translated into execution because of complexity, legacy, skills, capacity or technical debt." } },
-    "M4": { "label": "Asset / dependency visibility gap", "definition": { "nl": "De organisatie mist zicht op getroffen assets, afhankelijkheden, accounts, dataopslag of blootstellingspaden.", "en": "The organization lacks visibility of affected assets, dependencies, accounts, data stores or exposure paths." } },
-    "M5": { "label": "Patch / configuration latency", "definition": { "nl": "Een bekende kwetsbaarheid, configuratiezwakte of beveiligingsbaseline blijft blootgesteld nadat die verholpen had moeten zijn.", "en": "A known vulnerability, configuration weakness or security baseline remains exposed after it should have been remediated." } },
-    "M6": { "label": "Identity / access-control exposure", "definition": { "nl": "Zwakte in MFA, IAM, PAM, geprivilegieerde toegang, credentials, secrets of account-levenscyclus.", "en": "Weakness in MFA, IAM, PAM, privileged access, credentials, secrets or account lifecycle." } },
-    "M7": { "label": "Third-party / supply-chain trust boundary", "definition": { "nl": "Vertrouwen in leveranciers, software-updates, MSP's, overgenomen systemen of externe platformen wordt niet gedekt door operationele zekerheid.", "en": "Trust in suppliers, software updates, MSPs, acquired systems or external platforms is not matched by operational assurance." } },
-    "M8": { "label": "Segmentation / containment weakness", "definition": { "nl": "De technische architectuur bevat een compromittering onvoldoende; laterale beweging of impact wordt disproportioneel.", "en": "Technical architecture does not contain compromise; lateral movement or blast radius becomes disproportionate." } },
-    "M9": { "label": "Resilience / recovery path dependency", "definition": { "nl": "Bedrijfscontinuïteit, herstel of handmatige fallback leunt op fragiele technische of organisatorische aannames.", "en": "Business continuity, recovery or manual fallback depends on fragile technical or organizational assumptions." } },
-    "M10": { "label": "Data governance / disclosure gap", "definition": { "nl": "Retentie, dataminimalisatie, privacyverplichtingen of meldplicht zijn niet geoperationaliseerd.", "en": "Data retention, data minimization, privacy obligations, breach disclosure or trust obligations are not operationalized." } },
-    "M11": { "label": "Monitoring / detection / validation gap", "definition": { "nl": "Beveiligingsmonitoring, validatie, alertafhandeling of controle-testing signaleert of bevat het incident niet tijdig.", "en": "Security monitoring, validation, alert handling or control testing fails to identify or contain the incident in time." } },
-    "X": { "label": "No DV evidenced", "definition": { "nl": "Publiek bewijs ondersteunt geen doctrinal-operationele mismatch.", "en": "Public evidence does not support a doctrinal-operational misalignment." } }
+    "M1": {
+      "label": "Governance / ownership isolation",
+      "definition": { "nl": "Risico-eigenaarschap, accountability of leidinggevend toezicht is versnipperd of afwezig.", "en": "Risk ownership, accountability or leadership supervision is fragmented or absent." },
+      "knowingDoingQuestion": { "nl": "Onze mensen weten wie verantwoordelijk is voor dit risico, maar in de praktijk wordt dat eigenaarschap niet actief ingevuld.", "en": "Our people know who owns this risk, but in practice that ownership isn't actively filled in." },
+      "doctrinalMaterialQuestion": { "nl": "Er bestaat beleid over eigenaarschap en toezicht, maar de operationele werkelijkheid wijkt daarvan af.", "en": "Policy on ownership and supervision exists, but the operational reality diverges from it." }
+    },
+    "M2": {
+      "label": "Generic knowing-doing execution gap",
+      "definition": { "nl": "Een bekende of kenbare controleverwachting wordt geen operationele praktijk.", "en": "A known or knowable control expectation does not become operational practice." },
+      "knowingDoingQuestion": { "nl": "We weten wat er moet gebeuren om een bekend risico te beheersen, maar het wordt niet consistent uitgevoerd.", "en": "We know what needs to happen to manage a known risk, but it isn't executed consistently." },
+      "doctrinalMaterialQuestion": { "nl": "Onze procedures beschrijven de juiste aanpak, maar de dagelijkse praktijk wijkt daar geregeld van af.", "en": "Our procedures describe the right approach, but daily practice regularly diverges from it." }
+    },
+    "M3": {
+      "label": "Expertise / capability constraint",
+      "definition": { "nl": "Specialistische beveiligingskennis bestaat, maar kan niet worden vertaald naar uitvoering door complexiteit, legacy, schaarste of technical debt.", "en": "Specialist security knowledge exists but cannot be translated into execution because of complexity, legacy, skills, capacity or technical debt." },
+      "knowingDoingQuestion": { "nl": "Onze specialisten weten wat er nodig is, maar complexiteit of gebrek aan capaciteit verhindert de daadwerkelijke uitvoering.", "en": "Our specialists know what's needed, but complexity or lack of capacity prevents actual execution." },
+      "doctrinalMaterialQuestion": { "nl": "We beschikken op papier over de juiste expertise, maar de operationele realiteit (legacy, schaarste, technical debt) maakt toepassing lastig.", "en": "We have the right expertise on paper, but the operational reality (legacy, scarcity, technical debt) makes applying it difficult." }
+    },
+    "M4": {
+      "label": "Asset / dependency visibility gap",
+      "definition": { "nl": "De organisatie mist zicht op getroffen assets, afhankelijkheden, accounts, dataopslag of blootstellingspaden.", "en": "The organization lacks visibility of affected assets, dependencies, accounts, data stores or exposure paths." },
+      "knowingDoingQuestion": { "nl": "We weten dat overzicht van assets en afhankelijkheden belangrijk is, maar in de praktijk ontbreekt volledig zicht hierop.", "en": "We know visibility of assets and dependencies matters, but in practice full visibility is missing." },
+      "doctrinalMaterialQuestion": { "nl": "Er is beleid voor asset- en dependency-management, maar de operationele registratie is onvolledig of verouderd.", "en": "Asset/dependency-management policy exists, but the operational records are incomplete or outdated." }
+    },
+    "M5": {
+      "label": "Patch / configuration latency",
+      "definition": { "nl": "Een bekende kwetsbaarheid, configuratiezwakte of beveiligingsbaseline blijft blootgesteld nadat die verholpen had moeten zijn.", "en": "A known vulnerability, configuration weakness or security baseline remains exposed after it should have been remediated." },
+      "knowingDoingQuestion": { "nl": "We weten van kwetsbaarheden en beschikbare patches, maar remediëren niet altijd op tijd.", "en": "We know about vulnerabilities and available patches, but don't always remediate on time." },
+      "doctrinalMaterialQuestion": { "nl": "Er is een patchbeleid, maar de operationele uitvoering ervan loopt structureel achter.", "en": "A patch policy exists, but its operational execution structurally lags behind." }
+    },
+    "M6": {
+      "label": "Identity / access-control exposure",
+      "definition": { "nl": "Zwakte in MFA, IAM, PAM, geprivilegieerde toegang, credentials, secrets of account-levenscyclus.", "en": "Weakness in MFA, IAM, PAM, privileged access, credentials, secrets or account lifecycle." },
+      "knowingDoingQuestion": { "nl": "We kennen het belang van MFA en toegangscontrole, maar passen dit niet overal consequent toe.", "en": "We know the importance of MFA and access control, but don't apply it consistently everywhere." },
+      "doctrinalMaterialQuestion": { "nl": "Er is een identiteits- en toegangsbeleid, maar de praktijk (legacy accounts, uitzonderingen) wijkt daarvan af.", "en": "An identity/access policy exists, but practice (legacy accounts, exceptions) diverges from it." }
+    },
+    "M7": {
+      "label": "Third-party / supply-chain trust boundary",
+      "definition": { "nl": "Vertrouwen in leveranciers, software-updates, MSP's, overgenomen systemen of externe platformen wordt niet gedekt door operationele zekerheid.", "en": "Trust in suppliers, software updates, MSPs, acquired systems or external platforms is not matched by operational assurance." },
+      "knowingDoingQuestion": { "nl": "We weten dat leveranciers en updates een risico vormen, maar toetsen dit onvoldoende actief.", "en": "We know suppliers and updates carry risk, but don't actively test for it enough." },
+      "doctrinalMaterialQuestion": { "nl": "Er is een leveranciersbeleid, maar de operationele zekerheid over derde partijen is beperkt.", "en": "Supplier policy exists, but operational assurance over third parties is limited." }
+    },
+    "M8": {
+      "label": "Segmentation / containment weakness",
+      "definition": { "nl": "De technische architectuur bevat een compromittering onvoldoende; laterale beweging of impact wordt disproportioneel.", "en": "Technical architecture does not contain compromise; lateral movement or blast radius becomes disproportionate." },
+      "knowingDoingQuestion": { "nl": "We weten dat segmentatie belangrijk is om verspreiding te beperken, maar de inrichting ervan is niet overal doorgevoerd.", "en": "We know segmentation matters to limit spread, but it isn't implemented everywhere." },
+      "doctrinalMaterialQuestion": { "nl": "Er is een segmentatie-architectuur op papier, maar in de praktijk is het netwerk vlakker dan bedoeld.", "en": "A segmentation architecture exists on paper, but in practice the network is flatter than intended." }
+    },
+    "M9": {
+      "label": "Resilience / recovery path dependency",
+      "definition": { "nl": "Bedrijfscontinuïteit, herstel of handmatige fallback leunt op fragiele technische of organisatorische aannames.", "en": "Business continuity, recovery or manual fallback depends on fragile technical or organizational assumptions." },
+      "knowingDoingQuestion": { "nl": "We weten wat nodig is voor herstel na een incident, maar ons herstelvermogen is in de praktijk nooit volledig getest.", "en": "We know what's needed to recover from an incident, but our recovery capability has never been fully tested in practice." },
+      "doctrinalMaterialQuestion": { "nl": "Er is een continuïteits- en herstelplan, maar het steunt op aannames die operationeel nog niet bewezen zijn.", "en": "A continuity/recovery plan exists, but it rests on assumptions not yet proven operationally." }
+    },
+    "M10": {
+      "label": "Data governance / disclosure gap",
+      "definition": { "nl": "Retentie, dataminimalisatie, privacyverplichtingen of meldplicht zijn niet geoperationaliseerd.", "en": "Data retention, data minimization, privacy obligations, breach disclosure or trust obligations are not operationalized." },
+      "knowingDoingQuestion": { "nl": "We weten wat de meldplicht en dataretentie-eisen zijn, maar passen dit niet altijd consistent toe.", "en": "We know the disclosure and data-retention requirements, but don't always apply them consistently." },
+      "doctrinalMaterialQuestion": { "nl": "Er is databeleid, maar de operationele naleving (retentie, meldprocedures) is niet geborgd.", "en": "Data policy exists, but operational compliance (retention, disclosure procedures) isn't secured." }
+    },
+    "M11": {
+      "label": "Monitoring / detection / validation gap",
+      "definition": { "nl": "Beveiligingsmonitoring, validatie, alertafhandeling of controle-testing signaleert of bevat het incident niet tijdig.", "en": "Security monitoring, validation, alert handling or control testing fails to identify or contain the incident in time." },
+      "knowingDoingQuestion": { "nl": "We weten dat monitoring en validatie belangrijk zijn, maar controleren niet actief of onze detectie ook echt werkt.", "en": "We know monitoring and validation matter, but don't actively verify our detection actually works." },
+      "doctrinalMaterialQuestion": { "nl": "Er is monitoring ingericht, maar de operationele effectiviteit ervan (dekking, validatie, opvolging) is onduidelijk.", "en": "Monitoring is set up, but its operational effectiveness (coverage, validation, follow-up) is unclear." }
+    },
+    "X": {
+      "label": "No DV evidenced",
+      "definition": { "nl": "Publiek bewijs ondersteunt geen doctrinal-operationele mismatch.", "en": "Public evidence does not support a doctrinal-operational misalignment." }
+    }
   },
 
   "scenarios": [

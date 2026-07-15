@@ -1,16 +1,22 @@
 /**
  * Wires QuizEngine + QuizView + ScenarioPicker + AnswerSummary +
- * QuadrantDiagram + LanguageSwitch together and switches between the
- * question view and the result view.
+ * QuadrantDiagram + RelevanceEngine/View + LanguageSwitch together and
+ * switches between the question, result and relevance-check views.
  *
  * Two paths lead to a result:
  * - the manual quiz: answers are scored through KDQ.resolveResultKey.
  * - a researched scenario: its "resultKey" is the classification the
  *   research already assigned, used as-is (see data/content.js).
  *
+ * A scenario result can additionally lead into the relevance check —
+ * a separate, question-by-question sub-flow (own button, own "page")
+ * reachable only from a scenario result, since it's derived from that
+ * scenario's risk markers.
+ *
  * On a language change, the app re-renders whichever view is
  * currently active instead of reloading, so state (quiz progress or
- * the shown result) survives the switch.
+ * the shown result) survives the switch — except mid-relevance-check
+ * progress, which resets back to the case result on a language swap.
  */
 (function (KDQ) {
   'use strict';
@@ -19,6 +25,9 @@
     this.root = root;
     this.questionView = root.querySelector('#questionView');
     this.resultView = root.querySelector('#resultView');
+    this.relevanceViewEl = root.querySelector('#relevanceView');
+    this.relevanceResultView = root.querySelector('#relevanceResultView');
+    this.relevanceIntro = root.querySelector('#relevanceIntro');
     this._activeRelationshipKey = null;
     this._previewKey = null;
 
@@ -43,6 +52,21 @@
 
     this.layoutEl = root.querySelector('.layout');
     this.markersPanelSection = root.querySelector('#markersPanelSection');
+
+    this.relevanceEngine = new KDQ.RelevanceEngine();
+    this.relevanceView = new KDQ.RelevanceView(this.relevanceEngine, {
+      stepLabel: root.querySelector('#relevanceStepLabel'),
+      progressFill: root.querySelector('#relevanceProgressFill'),
+      questionMeta: root.querySelector('#relevanceQuestionMeta'),
+      questionText: root.querySelector('#relevanceQuestionText'),
+      scale: root.querySelector('#relevanceScale'),
+      btnBack: root.querySelector('#relevanceBack'),
+      btnNext: root.querySelector('#relevanceNext')
+    });
+    this.relevanceSummary = root.querySelector('#relevanceSummary');
+    this.btnStartRelevance = root.querySelector('#btnStartRelevance');
+    this.btnBackToCaseResult = root.querySelector('#btnBackToCaseResult');
+    this.btnRestartFromRelevance = root.querySelector('#btnRestartFromRelevance');
 
     this.diagram = new KDQ.QuadrantDiagram({
       resultGroup: root.querySelector('#resultGroup'),
@@ -72,6 +96,11 @@
 
     this.diagram.onSelectRelationship = this._handleLegendPreview.bind(this);
 
+    this.btnStartRelevance.addEventListener('click', this._startRelevanceCheck.bind(this));
+    this.relevanceView.onComplete = this._finishRelevanceCheck.bind(this);
+    this.btnBackToCaseResult.addEventListener('click', this._backToCaseResult.bind(this));
+    this.btnRestartFromRelevance.addEventListener('click', this.restart.bind(this));
+
     this.btnRestart.addEventListener('click', this.restart.bind(this));
     this.homeLink.addEventListener('click', this.restart.bind(this));
 
@@ -100,6 +129,8 @@
     var relationship = KDQ.getRelationship(relationshipKey);
 
     this.questionView.classList.add('hidden');
+    this.relevanceViewEl.classList.add('hidden');
+    this.relevanceResultView.classList.add('hidden');
     this.resultView.classList.remove('hidden');
 
     this.answerSummary.render(meta);
@@ -115,6 +146,53 @@
     var showThirdColumn = meta.source === 'scenario';
     this.layoutEl.classList.toggle('three-col', showThirdColumn);
     this.markersPanelSection.classList.toggle('hidden', !showThirdColumn);
+
+    // The relevance check is scenario-only too — the manual quiz has no markers to derive it from.
+    if (meta.source === 'scenario') {
+      this.relevanceEngine.loadScenario(meta.scenario);
+      this.relevanceIntro.classList.toggle('hidden', !this.relevanceEngine.hasQuestions());
+    } else {
+      this.relevanceIntro.classList.add('hidden');
+    }
+  };
+
+  App.prototype._startRelevanceCheck = function () {
+    this.resultView.classList.add('hidden');
+    this.relevanceViewEl.classList.remove('hidden');
+    this.relevanceEngine.index = 0;
+    this.relevanceView.render();
+  };
+
+  App.prototype._finishRelevanceCheck = function () {
+    var average = this.relevanceEngine.average();
+    var band = KDQ.getRelevanceBand(average);
+
+    this.relevanceSummary.innerHTML = '';
+
+    var gaugeWrap = document.createElement('div');
+    gaugeWrap.className = 'relevance-gauge-wrap';
+    gaugeWrap.appendChild(KDQ.buildRelevanceGauge(average));
+
+    var label = document.createElement('p');
+    label.className = 'relevance-gauge-label';
+    label.textContent = KDQ.i18n.t(band.labelKey);
+    gaugeWrap.appendChild(label);
+
+    this.relevanceSummary.appendChild(gaugeWrap);
+
+    var text = document.createElement('p');
+    text.className = 'relevance-score-text';
+    text.textContent = KDQ.i18n.t(band.textKey);
+    this.relevanceSummary.appendChild(text);
+
+    this.relevanceViewEl.classList.add('hidden');
+    this.relevanceResultView.classList.remove('hidden');
+  };
+
+  App.prototype._backToCaseResult = function () {
+    this.relevanceResultView.classList.add('hidden');
+    this.relevanceViewEl.classList.add('hidden');
+    this.resultView.classList.remove('hidden');
   };
 
   App.prototype.restart = function () {
@@ -126,6 +204,9 @@
     this.scenarioPicker.reset();
     this.diagram.showLegend();
     this.resultView.classList.add('hidden');
+    this.relevanceViewEl.classList.add('hidden');
+    this.relevanceResultView.classList.add('hidden');
+    this.relevanceIntro.classList.add('hidden');
     this.questionView.classList.remove('hidden');
     this.resultTypeBlock.classList.add('hidden');
     this.diagramHint.classList.remove('hidden');
@@ -145,7 +226,8 @@
     this.scenarioPicker.refresh();
 
     if (this._activeRelationshipKey) {
-      // Re-render the currently shown result in the new language.
+      // Re-render the currently shown result in the new language — this
+      // also resets any in-progress relevance check back to the case result.
       this.showResult(this._activeRelationshipKey, this._activeMeta);
     } else if (this._previewKey) {
       this._handleLegendPreview(this._previewKey);
