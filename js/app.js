@@ -31,6 +31,11 @@
     this._activeRelationshipKey = null;
     this._previewKey = null;
 
+    this.tabStartBtn = root.querySelector('#tabStartBtn');
+    this.tabAboutBtn = root.querySelector('#tabAboutBtn');
+    this.startTab = root.querySelector('#startTab');
+    this.aboutTab = root.querySelector('#aboutTab');
+
     this.engine = new KDQ.QuizEngine(KDQ.getQuestions());
     this.quizView = new KDQ.QuizView(this.engine, {
       stepLabel: root.querySelector('#stepLabel'),
@@ -104,6 +109,9 @@
     this.btnRestart.addEventListener('click', this.restart.bind(this));
     this.homeLink.addEventListener('click', this.restart.bind(this));
 
+    this.tabStartBtn.addEventListener('click', function () { this._switchTab('start'); }.bind(this));
+    this.tabAboutBtn.addEventListener('click', function () { this._switchTab('about'); }.bind(this));
+
     KDQ.i18n.onChange(this._handleLanguageChange.bind(this));
 
     this._applyDocumentStrings();
@@ -159,6 +167,7 @@
   App.prototype._startRelevanceCheck = function () {
     this.resultView.classList.add('hidden');
     this.relevanceViewEl.classList.remove('hidden');
+    this.relevanceIntro.classList.add('hidden');
     this.relevanceEngine.index = 0;
     this.relevanceView.render();
   };
@@ -193,6 +202,16 @@
     this.relevanceResultView.classList.add('hidden');
     this.relevanceViewEl.classList.add('hidden');
     this.resultView.classList.remove('hidden');
+    if (this.relevanceEngine.hasQuestions()) this.relevanceIntro.classList.remove('hidden');
+  };
+
+  /** Switches between the "Start" (scenario/quiz) and "About DV" tabs — homepage only. */
+  App.prototype._switchTab = function (tab) {
+    var showStart = tab === 'start';
+    this.startTab.classList.toggle('hidden', !showStart);
+    this.aboutTab.classList.toggle('hidden', showStart);
+    this.tabStartBtn.classList.toggle('active', showStart);
+    this.tabAboutBtn.classList.toggle('active', !showStart);
   };
 
   App.prototype.restart = function () {
@@ -212,6 +231,7 @@
     this.diagramHint.classList.remove('hidden');
     this.layoutEl.classList.remove('three-col');
     this.markersPanelSection.classList.add('hidden');
+    this._switchTab('start');
     this.quizView.render();
   };
 

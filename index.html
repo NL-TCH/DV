@@ -13,13 +13,12 @@
 
 <div class="page">
 
-  <div class="topbar">
-    <div class="lang-switch" id="langSwitch"></div>
-  </div>
-
   <header class="hero">
-    <h1><button type="button" class="home-link" id="homeLink" data-i18n="hero.title"></button></h1>
-    <p class="subtitle" data-i18n="hero.subtitle"></p>
+    <div class="hero-text">
+      <h1><button type="button" class="home-link" id="homeLink" data-i18n="hero.title"></button></h1>
+      <p class="subtitle" data-i18n="hero.subtitle"></p>
+    </div>
+    <div class="lang-switch" id="langSwitch"></div>
   </header>
 
   <main class="layout">
@@ -28,30 +27,54 @@
       <div class="card">
 
         <div id="questionView">
-          <div class="scenario-picker">
-            <p class="step-heading" data-i18n="scenario.heading"></p>
-            <p class="step-hint" data-i18n="scenario.hint"></p>
-            <select class="scenario-select" id="scenarioSelect"></select>
+          <div class="view-tabs">
+            <button type="button" class="view-tab active" id="tabStartBtn" data-i18n="tabs.start"></button>
+            <button type="button" class="view-tab" id="tabAboutBtn" data-i18n="tabs.about"></button>
           </div>
 
-          <div class="or-divider"><span data-i18n="or-divider"></span></div>
+          <div id="startTab">
+            <div class="scenario-picker">
+              <p class="step-heading" data-i18n="scenario.heading"></p>
+              <p class="step-hint" data-i18n="scenario.hint"></p>
+              <select class="scenario-select" id="scenarioSelect"></select>
+            </div>
 
-          <div class="step-heading-block">
-            <p class="step-heading" data-i18n="quiz.heading"></p>
-            <p class="step-hint" data-i18n="quiz.hint"></p>
+            <div class="or-divider"><span data-i18n="or-divider"></span></div>
+
+            <div class="step-heading-block">
+              <p class="step-heading" data-i18n="quiz.heading"></p>
+              <p class="step-hint" data-i18n="quiz.hint"></p>
+            </div>
+
+            <div class="quiz-meta">
+              <span class="step-label" id="stepLabel"></span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <h2 class="q-title" id="qTitle"></h2>
+            <div class="options" id="qOptions"></div>
+            <div class="nav-row">
+              <button class="btn btn-ghost" type="button" id="btnBack"></button>
+              <button class="btn btn-primary" type="button" id="btnNext" disabled></button>
+            </div>
           </div>
 
-          <div class="quiz-meta">
-            <span class="step-label" id="stepLabel"></span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="progressFill"></div>
-          </div>
-          <h2 class="q-title" id="qTitle"></h2>
-          <div class="options" id="qOptions"></div>
-          <div class="nav-row">
-            <button class="btn btn-ghost" type="button" id="btnBack"></button>
-            <button class="btn btn-primary" type="button" id="btnNext" disabled></button>
+          <div id="aboutTab" class="hidden">
+            <p class="about-heading" data-i18n="about.heading"></p>
+            <p class="about-text" data-i18n="about.intro"></p>
+
+            <p class="about-subheading" data-i18n="about.sub1"></p>
+            <p class="about-text" data-i18n="about.text1"></p>
+
+            <p class="about-subheading" data-i18n="about.sub2"></p>
+            <p class="about-text" data-i18n="about.text2"></p>
+
+            <p class="about-subheading" data-i18n="about.sub3"></p>
+            <p class="about-text" data-i18n="about.text3"></p>
+
+            <p class="about-subheading" data-i18n="about.sub4"></p>
+            <p class="about-text" data-i18n="about.text4"></p>
           </div>
         </div>
 
@@ -149,7 +172,7 @@
         <div class="relevance-intro hidden" id="relevanceIntro">
           <p class="step-heading" data-i18n="relevance.heading"></p>
           <p class="step-hint" data-i18n="relevance.hint"></p>
-          <button class="btn btn-primary" type="button" id="btnStartRelevance" data-i18n="relevance.startButton"></button>
+          <button class="btn btn-ghost" type="button" id="btnStartRelevance" data-i18n="relevance.startButton"></button>
         </div>
       </div>
     </section>
