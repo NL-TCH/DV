@@ -31,10 +31,11 @@
     this._activeRelationshipKey = null;
     this._previewKey = null;
 
-    this.tabStartBtn = root.querySelector('#tabStartBtn');
-    this.tabAboutBtn = root.querySelector('#tabAboutBtn');
-    this.startTab = root.querySelector('#startTab');
-    this.aboutTab = root.querySelector('#aboutTab');
+    this.tabs = [
+      { key: 'start', btn: root.querySelector('#tabStartBtn'), content: root.querySelector('#startTab') },
+      { key: 'about', btn: root.querySelector('#tabAboutBtn'), content: root.querySelector('#aboutTab') },
+      { key: 'dataset', btn: root.querySelector('#tabDatasetBtn'), content: root.querySelector('#datasetTab') }
+    ];
 
     this.engine = new KDQ.QuizEngine(KDQ.getQuestions());
     this.quizView = new KDQ.QuizView(this.engine, {
@@ -109,8 +110,9 @@
     this.btnRestart.addEventListener('click', this.restart.bind(this));
     this.homeLink.addEventListener('click', this.restart.bind(this));
 
-    this.tabStartBtn.addEventListener('click', function () { this._switchTab('start'); }.bind(this));
-    this.tabAboutBtn.addEventListener('click', function () { this._switchTab('about'); }.bind(this));
+    this.tabs.forEach(function (tab) {
+      tab.btn.addEventListener('click', function () { this._switchTab(tab.key); }.bind(this));
+    }, this);
 
     KDQ.i18n.onChange(this._handleLanguageChange.bind(this));
 
@@ -194,8 +196,49 @@
     text.textContent = KDQ.i18n.t(band.textKey);
     this.relevanceSummary.appendChild(text);
 
+    this.relevanceSummary.appendChild(this._buildMarkerBreakdown());
+
     this.relevanceViewEl.classList.add('hidden');
     this.relevanceResultView.classList.remove('hidden');
+  };
+
+  /** Small bar-per-marker breakdown shown below the gauge — how each marker scored on its own. */
+  App.prototype._buildMarkerBreakdown = function () {
+    var wrap = document.createElement('div');
+    wrap.className = 'relevance-marker-breakdown';
+
+    var heading = document.createElement('p');
+    heading.className = 'relevance-marker-heading';
+    heading.textContent = KDQ.i18n.t('relevance.perMarkerHeading');
+    wrap.appendChild(heading);
+
+    this.relevanceEngine.perMarkerScores().forEach(function (item) {
+      var marker = KDQ.getMarker(item.markerCode);
+      var band = KDQ.getRelevanceBand(item.average);
+
+      var row = document.createElement('div');
+      row.className = 'relevance-marker-row';
+
+      var top = document.createElement('div');
+      top.className = 'relevance-marker-top';
+      top.innerHTML =
+        '<span class="relevance-marker-label">' + item.markerCode + ' — ' + marker.label + '</span>' +
+        '<span class="relevance-marker-value">' + item.average.toFixed(1) + ' / 5</span>';
+      row.appendChild(top);
+
+      var track = document.createElement('div');
+      track.className = 'relevance-marker-track';
+      var fill = document.createElement('div');
+      fill.className = 'relevance-marker-fill';
+      fill.style.width = ((item.average - 1) / 4 * 100) + '%';
+      fill.style.background = band.color;
+      track.appendChild(fill);
+      row.appendChild(track);
+
+      wrap.appendChild(row);
+    });
+
+    return wrap;
   };
 
   App.prototype._backToCaseResult = function () {
@@ -205,13 +248,13 @@
     if (this.relevanceEngine.hasQuestions()) this.relevanceIntro.classList.remove('hidden');
   };
 
-  /** Switches between the "Start" (scenario/quiz) and "About DV" tabs — homepage only. */
-  App.prototype._switchTab = function (tab) {
-    var showStart = tab === 'start';
-    this.startTab.classList.toggle('hidden', !showStart);
-    this.aboutTab.classList.toggle('hidden', showStart);
-    this.tabStartBtn.classList.toggle('active', showStart);
-    this.tabAboutBtn.classList.toggle('active', !showStart);
+  /** Switches between the homepage tabs (Start / About DV / About the data). */
+  App.prototype._switchTab = function (activeKey) {
+    this.tabs.forEach(function (tab) {
+      var isActive = tab.key === activeKey;
+      tab.content.classList.toggle('hidden', !isActive);
+      tab.btn.classList.toggle('active', isActive);
+    });
   };
 
   App.prototype.restart = function () {

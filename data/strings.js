@@ -26,6 +26,7 @@ KDQ.STRINGS = {
 
   "tabs.start": { "nl": "Start", "en": "Start" },
   "tabs.about": { "nl": "Over DV", "en": "About DV" },
+  "tabs.dataset": { "nl": "Over de data", "en": "About the data" },
 
   "about.heading": { "nl": "Wat is Dual Vulnerabilities?", "en": "What is Dual Vulnerabilities?" },
   "about.intro": { "nl": "De meeste organisaties behandelen cyberrisico als een 'whack-a-mole'-spel: kwetsbaarheden worden één voor één gepatcht, los van elkaar. Maar risico's staan niet op zichzelf — ze wisselwerken en kunnen samen een veel grotere, niet-lineaire impact veroorzaken dan de som van de losse delen.", "en": "Most organizations treat cyber risk as a game of whack-a-mole: vulnerabilities get patched one by one, in isolation. But risks don't exist in isolation — they interact, and together can cause a much larger, non-linear impact than the sum of their parts." },
@@ -37,6 +38,16 @@ KDQ.STRINGS = {
   "about.text3": { "nl": "De combinatie van beide assen levert het kwadrant op dat je op deze pagina ziet: Strategy → Leadership, Strategy → Execution, Expertise → Leadership en Expertise → Execution. Klik op een van de lijnen in het kwadrant om per patroon een uitleg te lezen.", "en": "Combining both axes produces the quadrant shown on this page: Strategy → Leadership, Strategy → Execution, Expertise → Leadership and Expertise → Execution. Click one of the lines in the quadrant to read an explanation per pattern." },
   "about.sub4": { "nl": "De onderzoeksbasis", "en": "The research basis" },
   "about.text4": { "nl": "Dit model is onderdeel van een scriptie van Joost Storms en Teunis Human aan Antwerp Management School, onder begeleiding van prof. dr. Yuri Bobbert. De 16 gedocumenteerde databreach-cases in deze tool zijn onderdeel van dat onderzoek.", "en": "This model is part of a thesis by Joost Storms and Teunis Human at Antwerp Management School, supervised by prof. dr. Yuri Bobbert. The 16 documented data-breach cases in this tool are part of that research." },
+
+  "dataset.heading": { "nl": "De EuRepoC-dataset", "en": "The EuRepoC dataset" },
+  "dataset.intro": { "nl": "Naast de 16 diepgaand onderzochte cases in deze tool is de European Repository of Cyber Incidents (EuRepoC) gebruikt als bredere contextbron bij het onderzoek.", "en": "Alongside the 16 in-depth researched cases in this tool, the European Repository of Cyber Incidents (EuRepoC) was used as a broader contextual source for the research." },
+  "dataset.sub1": { "nl": "Wat de dataset bevat", "en": "What the dataset contains" },
+  "dataset.text1": { "nl": "EuRepoC is een interdisciplinair, door experts in politiek, recht en technologie samengesteld archief van cyberincidenten. De gearchiveerde Zenodo-release (v1.3.2) bevat 3.416 incidenten tussen 1 januari 2000 en 31 december 2024, gecodeerd op 60 variabelen en onderbouwd met meer dan 220 bronnen; het live dashboard groeit continu door boven op die momentopname.", "en": "EuRepoC is an interdisciplinary archive of cyber incidents compiled by experts in politics, law and technology. The archived Zenodo release (v1.3.2) contains 3,416 incidents between January 1, 2000 and December 31, 2024, coded across 60 variables and drawing on more than 220 sources; the live dashboard keeps growing beyond that snapshot." },
+  "dataset.sub2": { "nl": "Reikwijdte", "en": "Scope" },
+  "dataset.text2": { "nl": "De dataset registreert cyberincidenten met een politieke dimensie — inclusief incidenten die nog niet gepolitiseerd zijn of waarvan geen politieke motivatie of afkomst van de aanvaller is vastgesteld. Per incident worden onder meer initiator- en doelland, betrokken dreigingsgroepen, sector, aanvalstype, attributie, respons en intensiteit vastgelegd.", "en": "The dataset records cyber incidents with a political dimension — including incidents that have not yet been politicized or where no political motivation or attacker affiliation has been established. Per incident it tracks, among other things, initiator and target country, threat groups involved, sector, incident type, attribution, response and intensity." },
+  "dataset.sub3": { "nl": "Bron", "en": "Source" },
+  "dataset.text3": { "nl": "Zettl-Schabath, Bund, Müller e.a. (2025). Global Dataset of Cyber Incidents (v1.3.2) [dataset]. European Repository of Cyber Incidents. Gepubliceerd onder CC BY-NC 4.0.", "en": "Zettl-Schabath, Bund, Müller et al. (2025). Global Dataset of Cyber Incidents (v1.3.2) [dataset]. European Repository of Cyber Incidents. Published under CC BY-NC 4.0." },
+  "dataset.sourceLink": { "nl": "Bekijk op Zenodo (DOI: 10.5281/zenodo.14965395)", "en": "View on Zenodo (DOI: 10.5281/zenodo.14965395)" },
 
   "quiz.heading": { "nl": "De zelfscan", "en": "The self-scan" },
   "quiz.hint": { "nl": "Vier korte vragen over jouw team.", "en": "Four short questions about your team." },
@@ -70,6 +81,7 @@ KDQ.STRINGS = {
   "relevance.scaleLow": { "nl": "Zeer onwaarschijnlijk", "en": "Very unlikely" },
   "relevance.scaleHigh": { "nl": "Zeer waarschijnlijk", "en": "Very likely" },
   "relevance.scoreLabel": { "nl": "Jouw relevantie-score", "en": "Your relevance score" },
+  "relevance.perMarkerHeading": { "nl": "Per risicomarker", "en": "Per risk marker" },
   "relevance.gaugeBand1": { "nl": "Geen kans", "en": "No chance" },
   "relevance.gaugeBand2": { "nl": "Klein", "en": "Minor" },
   "relevance.gaugeBand3": { "nl": "Gemiddeld", "en": "Moderate" },

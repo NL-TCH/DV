@@ -79,6 +79,29 @@
     return total / ids.length;
   };
 
+  /** Average of the 2 answers (knowing-doing, doctrinal-material) per marker, in question order. */
+  RelevanceEngine.prototype.perMarkerScores = function () {
+    var self = this;
+    var groups = {};
+    var order = [];
+
+    this.questions.forEach(function (question) {
+      var value = self.answers[question.id];
+      if (value == null) return;
+      if (!groups[question.markerCode]) {
+        groups[question.markerCode] = [];
+        order.push(question.markerCode);
+      }
+      groups[question.markerCode].push(value);
+    });
+
+    return order.map(function (code) {
+      var values = groups[code];
+      var total = values.reduce(function (sum, v) { return sum + v; }, 0);
+      return { markerCode: code, average: total / values.length };
+    });
+  };
+
   function RelevanceView(engine, dom) {
     this.engine = engine;
     this.dom = dom;
