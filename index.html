@@ -27,25 +27,19 @@
       <div class="card">
 
         <div id="questionView">
+          <p class="intro-line" data-i18n="intro.line"></p>
+
           <div class="view-tabs">
-            <button type="button" class="view-tab active" id="tabStartBtn" data-i18n="tabs.start"></button>
+            <button type="button" class="view-tab active" id="tabOverviewBtn" data-i18n="tabs.overview"></button>
+            <button type="button" class="view-tab" id="tabScenariosBtn" data-i18n="tabs.scenarios"></button>
+            <button type="button" class="view-tab" id="tabMarkersBtn" data-i18n="tabs.markers"></button>
             <button type="button" class="view-tab" id="tabAboutBtn" data-i18n="tabs.about"></button>
             <button type="button" class="view-tab" id="tabDatasetBtn" data-i18n="tabs.dataset"></button>
           </div>
 
-          <div id="startTab">
-            <div class="scenario-picker">
-              <p class="step-heading" data-i18n="scenario.heading"></p>
-              <p class="step-hint" data-i18n="scenario.hint"></p>
-              <select class="scenario-select" id="scenarioSelect"></select>
-            </div>
-
-            <div class="or-divider"><span data-i18n="or-divider"></span></div>
-
-            <div class="step-heading-block">
-              <p class="step-heading" data-i18n="quiz.heading"></p>
-              <p class="step-hint" data-i18n="quiz.hint"></p>
-            </div>
+          <div id="overviewTab">
+            <p class="step-heading" data-i18n="quiz.heading"></p>
+            <p class="step-hint" data-i18n="quiz.hint"></p>
 
             <div class="quiz-meta">
               <span class="step-label" id="stepLabel"></span>
@@ -61,39 +55,24 @@
             </div>
           </div>
 
+          <div id="scenariosTab" class="hidden">
+            <p class="step-heading" data-i18n="scenario.heading"></p>
+            <p class="step-hint" data-i18n="scenario.hint"></p>
+          </div>
+
+          <div id="markersTab" class="hidden">
+            <p class="step-heading" data-i18n="markers.heading"></p>
+            <p class="step-hint" data-i18n="markers.hint"></p>
+          </div>
+
           <div id="aboutTab" class="hidden">
-            <p class="about-heading" data-i18n="about.heading"></p>
-            <p class="about-text" data-i18n="about.intro"></p>
-
-            <p class="about-subheading" data-i18n="about.sub1"></p>
-            <p class="about-text" data-i18n="about.text1"></p>
-
-            <p class="about-subheading" data-i18n="about.sub2"></p>
-            <p class="about-text" data-i18n="about.text2"></p>
-
-            <p class="about-subheading" data-i18n="about.sub3"></p>
-            <p class="about-text" data-i18n="about.text3"></p>
-
-            <p class="about-subheading" data-i18n="about.sub4"></p>
-            <p class="about-text" data-i18n="about.text4"></p>
+            <p class="step-heading" data-i18n="about.heading"></p>
+            <p class="step-hint" data-i18n="about.teaserHint"></p>
           </div>
 
           <div id="datasetTab" class="hidden">
-            <p class="about-heading" data-i18n="dataset.heading"></p>
-            <p class="about-text" data-i18n="dataset.intro"></p>
-
-            <p class="about-subheading" data-i18n="dataset.sub1"></p>
-            <p class="about-text" data-i18n="dataset.text1"></p>
-
-            <p class="about-subheading" data-i18n="dataset.sub2"></p>
-            <p class="about-text" data-i18n="dataset.text2"></p>
-
-            <p class="about-subheading" data-i18n="dataset.sub3"></p>
-            <p class="about-text" data-i18n="dataset.text3"></p>
-
-            <p class="about-subheading" data-i18n="dataset.sub4"></p>
-            <p class="about-text" data-i18n="dataset.text4"></p>
-            <a class="case-source-link" href="https://zenodo.org/records/14965395" target="_blank" rel="noopener noreferrer" data-i18n="dataset.sourceLink"></a>
+            <p class="step-heading" data-i18n="dataset.heading"></p>
+            <p class="step-hint" data-i18n="dataset.teaserHint"></p>
           </div>
         </div>
 
@@ -144,43 +123,137 @@
 
     <section class="diagram-panel">
       <div class="card">
-        <div class="diagram-hint" id="diagramHint">
-          <p class="step-heading" data-i18n="diagram.heading"></p>
-          <p class="step-hint" data-i18n="diagram.hint"></p>
+
+        <div id="quadrantPanel">
+          <div class="diagram-hint" id="diagramHint">
+            <p class="step-heading" data-i18n="diagram.heading"></p>
+            <p class="step-hint" data-i18n="diagram.hint"></p>
+          </div>
+          <div class="quadrant-wrap">
+            <svg id="quadrantSvg" viewBox="0 0 1100 820" xmlns="http://www.w3.org/2000/svg">
+
+              <!-- column headers -->
+              <text x="248" y="44" class="axis-label-primary has-tooltip">Doctrinal<title data-i18n="tooltip.doctrinal"></title></text>
+              <text x="248" y="70" class="axis-label-secondary">strategy</text>
+
+              <text x="860" y="44" class="axis-label-primary has-tooltip">Material<title data-i18n="tooltip.material"></title></text>
+              <text x="860" y="70" class="axis-label-secondary">operational</text>
+
+              <!-- row headers -->
+              <text x="20" y="152" class="axis-label-primary has-tooltip">Knowing<title data-i18n="tooltip.knowing"></title></text>
+              <text x="20" y="178" class="axis-label-secondary">awareness</text>
+
+              <text x="20" y="768" class="axis-label-primary has-tooltip">Doing<title data-i18n="tooltip.doing"></title></text>
+              <text x="20" y="794" class="axis-label-secondary">behavior</text>
+
+              <!-- static grid -->
+              <rect x="234" y="122" width="754" height="616" fill="none" stroke="var(--grid-line)" stroke-width="1.4"/>
+              <line x1="611" y1="122" x2="611" y2="738" stroke="var(--grid-line)" stroke-width="1.4"/>
+              <line x1="234" y1="430" x2="988" y2="430" stroke="var(--grid-line)" stroke-width="1.4"/>
+
+              <!-- dynamic relationship (filled in by QuadrantDiagram) -->
+              <g id="resultGroup"></g>
+              <g id="resultLabelGroup"></g>
+
+            </svg>
+          </div>
+          <p class="result-tag" id="resultTag"><span class="swatch" id="resultSwatch"></span><span id="resultTagText"></span></p>
+          <div class="result-type-block hidden" id="resultTypeBlock">
+            <h2 class="result-title" id="resultTitle"></h2>
+            <p class="result-text" id="resultText"></p>
+          </div>
         </div>
-        <div class="quadrant-wrap">
-          <svg id="quadrantSvg" viewBox="0 0 1100 820" xmlns="http://www.w3.org/2000/svg">
 
-            <!-- column headers -->
-            <text x="248" y="44" class="axis-label-primary">Doctrinal</text>
-            <text x="248" y="70" class="axis-label-secondary">strategy</text>
+        <div id="scenarioListPanel" class="hidden">
+          <div class="filter-panel">
+            <div class="scenario-search-row">
+              <input type="text" class="scenario-search" id="scenarioSearchInput" data-i18n-placeholder="scenario.searchPlaceholder">
+              <select class="scenario-sort-select" id="scenarioSortSelect">
+                <option value="yearDesc" data-i18n="scenario.sortYearDesc"></option>
+                <option value="yearAsc" data-i18n="scenario.sortYearAsc"></option>
+                <option value="nameAsc" data-i18n="scenario.sortNameAsc"></option>
+                <option value="nameDesc" data-i18n="scenario.sortNameDesc"></option>
+              </select>
+            </div>
 
-            <text x="860" y="44" class="axis-label-primary">Material</text>
-            <text x="860" y="70" class="axis-label-secondary">operational</text>
+            <div class="filter-group">
+              <button type="button" class="filter-group-toggle" id="scenarioMarkerToggle">
+                <span class="filter-group-label" data-i18n="scenario.filterMarkerLabel"></span>
+                <span class="filter-group-badge hidden" id="scenarioMarkerBadge"></span>
+                <span class="filter-group-chevron">▾</span>
+              </button>
+              <div class="filter-check-list collapsed" id="scenarioMarkerChecks"></div>
+            </div>
 
-            <!-- row headers -->
-            <text x="20" y="152" class="axis-label-primary">Knowing</text>
-            <text x="20" y="178" class="axis-label-secondary">awareness</text>
+            <div class="filter-group">
+              <button type="button" class="filter-group-toggle" id="scenarioTypeToggle">
+                <span class="filter-group-label" data-i18n="scenario.filterTypeLabel"></span>
+                <span class="filter-group-badge hidden" id="scenarioTypeBadge"></span>
+                <span class="filter-group-chevron">▾</span>
+              </button>
+              <div class="filter-check-list collapsed" id="scenarioTypeChecks"></div>
+            </div>
 
-            <text x="20" y="768" class="axis-label-primary">Doing</text>
-            <text x="20" y="794" class="axis-label-secondary">behavior</text>
+            <div class="filter-group">
+              <p class="filter-group-label" data-i18n="scenario.filterYearLabel"></p>
+              <div class="year-slider">
+                <div class="year-slider-track-wrap">
+                  <div class="year-slider-track"></div>
+                  <div class="year-slider-range" id="yearSliderRange"></div>
+                  <input type="range" class="year-range" id="yearMinRange">
+                  <input type="range" class="year-range" id="yearMaxRange">
+                </div>
+                <div class="year-slider-labels">
+                  <span id="yearMinLabel"></span>
+                  <span id="yearMaxLabel"></span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-            <!-- static grid -->
-            <rect x="234" y="122" width="754" height="616" fill="none" stroke="var(--grid-line)" stroke-width="1.4"/>
-            <line x1="611" y1="122" x2="611" y2="738" stroke="var(--grid-line)" stroke-width="1.4"/>
-            <line x1="234" y1="430" x2="988" y2="430" stroke="var(--grid-line)" stroke-width="1.4"/>
-
-            <!-- dynamic relationship (filled in by QuadrantDiagram) -->
-            <g id="resultGroup"></g>
-            <g id="resultLabelGroup"></g>
-
-          </svg>
+          <div class="scenario-list" id="scenarioList"></div>
         </div>
-        <p class="result-tag" id="resultTag"><span class="swatch" id="resultSwatch"></span><span id="resultTagText"></span></p>
-        <div class="result-type-block hidden" id="resultTypeBlock">
-          <h2 class="result-title" id="resultTitle"></h2>
-          <p class="result-text" id="resultText"></p>
+
+        <div id="markerListPanel" class="hidden">
+          <div class="filter-check-list" id="markerOverviewChecks"></div>
+          <div class="scenario-list" id="markerScenarioList"></div>
         </div>
+
+        <div id="aboutContentPanel" class="hidden about-content">
+          <p class="about-heading" data-i18n="about.heading"></p>
+          <p class="about-text" data-i18n="about.intro"></p>
+
+          <p class="about-subheading" data-i18n="about.sub1"></p>
+          <p class="about-text" data-i18n="about.text1"></p>
+
+          <p class="about-subheading" data-i18n="about.sub2"></p>
+          <p class="about-text" data-i18n="about.text2"></p>
+
+          <p class="about-subheading" data-i18n="about.sub3"></p>
+          <p class="about-text" data-i18n="about.text3"></p>
+
+          <p class="about-subheading" data-i18n="about.sub4"></p>
+          <p class="about-text" data-i18n="about.text4"></p>
+        </div>
+
+        <div id="datasetContentPanel" class="hidden about-content">
+          <p class="about-heading" data-i18n="dataset.heading"></p>
+          <p class="about-text" data-i18n="dataset.intro"></p>
+
+          <p class="about-subheading" data-i18n="dataset.sub1"></p>
+          <p class="about-text" data-i18n="dataset.text1"></p>
+
+          <p class="about-subheading" data-i18n="dataset.sub2"></p>
+          <p class="about-text" data-i18n="dataset.text2"></p>
+
+          <p class="about-subheading" data-i18n="dataset.sub3"></p>
+          <p class="about-text" data-i18n="dataset.text3"></p>
+
+          <p class="about-subheading" data-i18n="dataset.sub4"></p>
+          <p class="about-text" data-i18n="dataset.text4"></p>
+          <a class="case-source-link" href="https://zenodo.org/records/14965395" target="_blank" rel="noopener noreferrer" data-i18n="dataset.sourceLink"></a>
+        </div>
+
       </div>
     </section>
 
@@ -217,6 +290,7 @@
 <script src="js/quadrant.js"></script>
 <script src="js/answers.js"></script>
 <script src="js/scenario.js"></script>
+<script src="js/markers-overview.js"></script>
 <script src="js/quiz.js"></script>
 <script src="js/relevance.js"></script>
 <script src="js/app.js"></script>

@@ -1,7 +1,11 @@
 /**
- * Wires QuizEngine + QuizView + ScenarioPicker + AnswerSummary +
- * QuadrantDiagram + RelevanceEngine/View + LanguageSwitch together and
- * switches between the question, result and relevance-check views.
+ * Wires QuizEngine + QuizView + ScenarioBrowser + MarkersOverview +
+ * AnswerSummary + QuadrantDiagram + RelevanceEngine/View +
+ * LanguageSwitch together. The homepage has 5 tabs (Overview,
+ * Scenarios, Risk markers, About DV, About the data). Overview is
+ * first/default and shows the self-scan quiz next to the live
+ * quadrant. Clicking a risk-marker tag on a scenario result jumps to
+ * Scenarios pre-filtered to that marker via ScenarioBrowser.filterByMarker().
  *
  * Two paths lead to a result:
  * - the manual quiz: answers are scored through KDQ.resolveResultKey.
@@ -32,10 +36,25 @@
     this._previewKey = null;
 
     this.tabs = [
-      { key: 'start', btn: root.querySelector('#tabStartBtn'), content: root.querySelector('#startTab') },
+      { key: 'overview', btn: root.querySelector('#tabOverviewBtn'), content: root.querySelector('#overviewTab') },
+      { key: 'scenarios', btn: root.querySelector('#tabScenariosBtn'), content: root.querySelector('#scenariosTab') },
+      { key: 'markers', btn: root.querySelector('#tabMarkersBtn'), content: root.querySelector('#markersTab') },
       { key: 'about', btn: root.querySelector('#tabAboutBtn'), content: root.querySelector('#aboutTab') },
       { key: 'dataset', btn: root.querySelector('#tabDatasetBtn'), content: root.querySelector('#datasetTab') }
     ];
+
+    // The right column shows one of: the quadrant, the scenario list, the
+    // marker list, or the About DV / About the data content — whichever
+    // matches the active left-column tab — except while a result is
+    // shown, when it always shows the quadrant. 'overview' has no entry
+    // below, so it falls back to the quadrant.
+    this.quadrantPanel = root.querySelector('#quadrantPanel');
+    this.rightPanels = {
+      scenarios: root.querySelector('#scenarioListPanel'),
+      markers: root.querySelector('#markerListPanel'),
+      about: root.querySelector('#aboutContentPanel'),
+      dataset: root.querySelector('#datasetContentPanel')
+    };
 
     this.engine = new KDQ.QuizEngine(KDQ.getQuestions());
     this.quizView = new KDQ.QuizView(this.engine, {
@@ -47,7 +66,27 @@
       btnNext: root.querySelector('#btnNext')
     });
 
-    this.scenarioPicker = new KDQ.ScenarioPicker(root.querySelector('#scenarioSelect'));
+    this.scenarioBrowser = new KDQ.ScenarioBrowser({
+      searchInput: root.querySelector('#scenarioSearchInput'),
+      sortSelect: root.querySelector('#scenarioSortSelect'),
+      markerToggle: root.querySelector('#scenarioMarkerToggle'),
+      markerBadge: root.querySelector('#scenarioMarkerBadge'),
+      markerChecks: root.querySelector('#scenarioMarkerChecks'),
+      typeToggle: root.querySelector('#scenarioTypeToggle'),
+      typeBadge: root.querySelector('#scenarioTypeBadge'),
+      typeChecks: root.querySelector('#scenarioTypeChecks'),
+      yearMinRange: root.querySelector('#yearMinRange'),
+      yearMaxRange: root.querySelector('#yearMaxRange'),
+      yearMinLabel: root.querySelector('#yearMinLabel'),
+      yearMaxLabel: root.querySelector('#yearMaxLabel'),
+      yearSliderRange: root.querySelector('#yearSliderRange'),
+      listContainer: root.querySelector('#scenarioList')
+    });
+
+    this.markersOverview = new KDQ.MarkersOverview({
+      checkContainer: root.querySelector('#markerOverviewChecks'),
+      listContainer: root.querySelector('#markerScenarioList')
+    });
 
     this.answerSummary = new KDQ.AnswerSummary({
       sourceTag: root.querySelector('#answerSourceTag'),
@@ -96,8 +135,16 @@
       this.showResult(KDQ.resolveResultKey(answers), { source: 'quiz', answers: answers });
     }.bind(this);
 
-    this.scenarioPicker.onSelect = function (scenario) {
+    this.scenarioBrowser.onSelect = function (scenario) {
       this.showResult(scenario.resultKey || 'none', { source: 'scenario', scenario: scenario });
+    }.bind(this);
+
+    this.markersOverview.onSelect = function (scenario) {
+      this.showResult(scenario.resultKey || 'none', { source: 'scenario', scenario: scenario });
+    }.bind(this);
+
+    this.answerSummary.onSelectMarker = function (code) {
+      this._goToFilteredScenarios(code);
     }.bind(this);
 
     this.diagram.onSelectRelationship = this._handleLegendPreview.bind(this);
@@ -118,6 +165,7 @@
 
     this._applyDocumentStrings();
     this.diagram.showLegend();
+    this._switchTab('overview');
     this.quizView.render();
   }
 
@@ -142,6 +190,11 @@
     this.relevanceViewEl.classList.add('hidden');
     this.relevanceResultView.classList.add('hidden');
     this.resultView.classList.remove('hidden');
+
+    // A result always reveals in the quadrant, regardless of which
+    // tab (and therefore which right-column panel) was active before.
+    this._hideAllRightPanels();
+    this.quadrantPanel.classList.remove('hidden');
 
     this.answerSummary.render(meta);
     this.resultTypeBlock.classList.remove('hidden');
@@ -248,13 +301,42 @@
     if (this.relevanceEngine.hasQuestions()) this.relevanceIntro.classList.remove('hidden');
   };
 
-  /** Switches between the homepage tabs (Start / About DV / About the data). */
+  /** Switches between the homepage tabs (Overview / Scenarios / Risk markers / About DV / About the data). */
   App.prototype._switchTab = function (activeKey) {
     this.tabs.forEach(function (tab) {
       var isActive = tab.key === activeKey;
       tab.content.classList.toggle('hidden', !isActive);
       tab.btn.classList.toggle('active', isActive);
     });
+    this._updateRightColumn(activeKey);
+  };
+
+  App.prototype._hideAllRightPanels = function () {
+    var self = this;
+    Object.keys(this.rightPanels).forEach(function (key) {
+      self.rightPanels[key].classList.add('hidden');
+    });
+  };
+
+  /**
+   * Right column mirrors the active left-column tab: Scenarios shows
+   * the scenario list, Risk markers shows the marker list, About DV /
+   * About the data show their own content panel, and Overview (no
+   * entry in rightPanels) falls back to the quadrant. showResult()
+   * overrides this back to the quadrant regardless.
+   */
+  App.prototype._updateRightColumn = function (activeKey) {
+    var target = this.rightPanels[activeKey] || null;
+    this._hideAllRightPanels();
+    if (target) target.classList.remove('hidden');
+    this.quadrantPanel.classList.toggle('hidden', !!target);
+  };
+
+  /** Called when a risk-marker tag on a scenario result is clicked: leave the result, land on Scenarios pre-filtered to that marker. */
+  App.prototype._goToFilteredScenarios = function (code) {
+    this.restart();
+    this.scenarioBrowser.filterByMarker(code);
+    this._switchTab('scenarios');
   };
 
   App.prototype.restart = function () {
@@ -263,7 +345,7 @@
     this._previewKey = null;
 
     this.engine.reset();
-    this.scenarioPicker.reset();
+    this.scenarioBrowser.reset();
     this.diagram.showLegend();
     this.resultView.classList.add('hidden');
     this.relevanceViewEl.classList.add('hidden');
@@ -274,7 +356,7 @@
     this.diagramHint.classList.remove('hidden');
     this.layoutEl.classList.remove('three-col');
     this.markersPanelSection.classList.add('hidden');
-    this._switchTab('start');
+    this._switchTab('overview');
     this.quizView.render();
   };
 
@@ -286,7 +368,8 @@
 
   App.prototype._handleLanguageChange = function () {
     this._applyDocumentStrings();
-    this.scenarioPicker.refresh();
+    this.scenarioBrowser.refresh();
+    this.markersOverview.refresh();
 
     if (this._activeRelationshipKey) {
       // Re-render the currently shown result in the new language — this

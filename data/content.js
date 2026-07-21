@@ -192,6 +192,7 @@ KDQ.CONTENT = {
   "scenarios": [
     {
       "id": "diginotar",
+      "year": 2011,
       "name": { "nl": "DigiNotar (2011) — certificaatcompromittering", "en": "DigiNotar (2011) — certificate compromise" },
       "breachType": { "nl": "Certificaatcompromittering", "en": "Certificate compromise" },
       "resultKey": "leadership",
@@ -217,6 +218,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "equifax",
+      "year": 2017,
       "name": { "nl": "Equifax (2017) — databreach", "en": "Equifax (2017) — data breach" },
       "breachType": { "nl": "Databreach", "en": "Data breach" },
       "resultKey": "execution",
@@ -243,6 +245,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "colonial-pipeline",
+      "year": 2021,
       "name": { "nl": "Colonial Pipeline (2021) — ransomware", "en": "Colonial Pipeline (2021) — ransomware" },
       "breachType": { "nl": "Ransomware", "en": "Ransomware" },
       "resultKey": "execution",
@@ -268,6 +271,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "solarwinds",
+      "year": 2020,
       "name": { "nl": "SolarWinds (2020) — supply-chain compromittering", "en": "SolarWinds (2020) — supply-chain compromise" },
       "breachType": { "nl": "Supply-chain compromittering", "en": "Supply-chain compromise" },
       "resultKey": "expertise-execution",
@@ -294,6 +298,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "maersk",
+      "year": 2017,
       "name": { "nl": "Maersk (2017) — NotPetya-malware", "en": "Maersk (2017) — NotPetya malware" },
       "breachType": { "nl": "Malware / wiper", "en": "Malware / wiper" },
       "resultKey": "expertise-execution",
@@ -319,6 +324,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "british-airways",
+      "year": 2018,
       "name": { "nl": "British Airways (2018) — databreach", "en": "British Airways (2018) — data breach" },
       "breachType": { "nl": "Databreach", "en": "Data breach" },
       "resultKey": "execution",
@@ -344,6 +350,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "marriott",
+      "year": 2018,
       "name": { "nl": "Marriott / Starwood (2018) — databreach", "en": "Marriott / Starwood (2018) — data breach" },
       "breachType": { "nl": "Databreach", "en": "Data breach" },
       "resultKey": "leadership",
@@ -369,6 +376,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "norsk-hydro",
+      "year": 2019,
       "name": { "nl": "Norsk Hydro (2019) — ransomware (contrastcase)", "en": "Norsk Hydro (2019) — ransomware (contrast case)" },
       "breachType": { "nl": "Ransomware", "en": "Ransomware" },
       "resultKey": "none",
@@ -395,6 +403,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "travelex",
+      "year": 2019,
       "name": { "nl": "Travelex (2019) — ransomware", "en": "Travelex (2019) — ransomware" },
       "breachType": { "nl": "Ransomware", "en": "Ransomware" },
       "resultKey": "execution",
@@ -420,6 +429,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "uber",
+      "year": 2022,
       "name": { "nl": "Uber (2022) — interne systemen gecompromitteerd", "en": "Uber (2022) — internal systems compromised" },
       "breachType": { "nl": "Databreach / interne systemen", "en": "Data breach / internal systems" },
       "resultKey": "execution",
@@ -446,6 +456,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "maastricht-university",
+      "year": 2019,
       "name": { "nl": "Maastricht University (2019) — ransomware", "en": "Maastricht University (2019) — ransomware" },
       "breachType": { "nl": "Ransomware", "en": "Ransomware" },
       "resultKey": "execution",
@@ -471,6 +482,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "knvb",
+      "year": null,
       "name": { "nl": "KNVB — databreach (contrastcase)", "en": "KNVB — data breach (contrast case)" },
       "breachType": { "nl": "Databreach / ransomware-claim", "en": "Data breach / ransomware claim" },
       "resultKey": "none",
@@ -493,6 +505,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "odido",
+      "year": 2026,
       "name": { "nl": "Odido (2026) — databreach (contrastcase)", "en": "Odido (2026) — data breach (contrast case)" },
       "breachType": { "nl": "Databreach", "en": "Data breach" },
       "resultKey": "none",
@@ -518,6 +531,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "jaguar-land-rover",
+      "year": 2025,
       "name": { "nl": "Jaguar Land Rover (2025) — cyberincident (contrastcase)", "en": "Jaguar Land Rover (2025) — cyber incident (contrast case)" },
       "breachType": { "nl": "Cyberincident / operationele verstoring", "en": "Cyber incident / operational disruption" },
       "resultKey": "none",
@@ -544,6 +558,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "yahoo",
+      "year": 2013,
       "name": { "nl": "Yahoo (2013–2014) — databreach", "en": "Yahoo (2013–2014) — data breach" },
       "breachType": { "nl": "Databreach", "en": "Data breach" },
       "resultKey": "leadership",
@@ -569,6 +584,7 @@ KDQ.CONTENT = {
     },
     {
       "id": "sony-pictures",
+      "year": 2014,
       "name": { "nl": "Sony Pictures (2014) — databreach / wiper", "en": "Sony Pictures (2014) — data breach / wiper" },
       "breachType": { "nl": "Databreach / wiper malware", "en": "Data breach / wiper malware" },
       "resultKey": "leadership",

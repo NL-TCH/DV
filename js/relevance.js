@@ -27,8 +27,8 @@
     uniqueCodes.forEach(function (code) {
       var marker = KDQ.getMarker(code);
       if (!marker || !marker.knowingDoingQuestion) return;
-      questions.push({ id: code + '-kd', markerCode: code, axisKey: 'relevance.axis.knowingDoing', text: marker.knowingDoingQuestion });
-      questions.push({ id: code + '-dm', markerCode: code, axisKey: 'relevance.axis.doctrinalMaterial', text: marker.doctrinalMaterialQuestion });
+      questions.push({ id: code + '-kd', markerCode: code, axisKey: 'relevance.axis.knowingDoing', axisTooltipKey: 'tooltip.knowingDoingAxis', text: marker.knowingDoingQuestion });
+      questions.push({ id: code + '-dm', markerCode: code, axisKey: 'relevance.axis.doctrinalMaterial', axisTooltipKey: 'tooltip.doctrinalMaterialAxis', text: marker.doctrinalMaterialQuestion });
     });
 
     this.questions = questions;
@@ -136,7 +136,8 @@
 
     dom.stepLabel.textContent = KDQ.i18n.t('step.counter') + ' 0' + stepNumber + ' — 0' + total;
     dom.progressFill.style.width = (stepNumber / total * 100) + '%';
-    dom.questionMeta.textContent = question.markerCode + ' — ' + marker.label + ' · ' + KDQ.i18n.t(question.axisKey);
+    dom.questionMeta.innerHTML = question.markerCode + ' — ' + marker.label + ' · ' +
+      '<span class="has-tooltip" title="' + KDQ.i18n.t(question.axisTooltipKey) + '">' + KDQ.i18n.t(question.axisKey) + '</span>';
     dom.questionText.textContent = KDQ.i18n.tr(question.text);
 
     var selected = engine.currentAnswer();

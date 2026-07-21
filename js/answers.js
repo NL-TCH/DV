@@ -15,6 +15,7 @@
     this.container = dom.container;
     this.markerContainer = dom.markerContainer;
     this.rationaleContainer = dom.rationaleContainer;
+    this.onSelectMarker = null;
     this._lastMeta = null;
   }
 
@@ -68,7 +69,7 @@
     sheet.className = 'case-sheet';
 
     sheet.appendChild(this._factRow(KDQ.i18n.t('case.breachType'), KDQ.i18n.tr(scenario.breachType)));
-    sheet.appendChild(this._factRow(KDQ.i18n.t('case.confidence'), KDQ.i18n.tr(scenario.confidence)));
+    sheet.appendChild(this._factRow(KDQ.i18n.t('case.confidence'), KDQ.i18n.tr(scenario.confidence), KDQ.i18n.t('tooltip.dvConfidence')));
     sheet.appendChild(this._textBlock(KDQ.i18n.t('case.summary'), KDQ.i18n.tr(scenario.summary)));
     if (scenario.notes) sheet.appendChild(this._textBlock(KDQ.i18n.t('case.notes'), KDQ.i18n.tr(scenario.notes)));
     if (scenario.sources && scenario.sources.length) sheet.appendChild(this._sourcesRow(scenario.sources));
@@ -80,27 +81,42 @@
     this._renderRationalePanel(scenario);
   };
 
-  AnswerSummary.prototype._factRow = function (label, value) {
+  AnswerSummary.prototype._factRow = function (label, value, tooltip) {
     var row = document.createElement('div');
     row.className = 'case-fact';
-    row.innerHTML = '<span class="case-fact-label">' + label + '</span><span class="case-fact-value">' + value + '</span>';
+    var labelClass = tooltip ? 'case-fact-label has-tooltip' : 'case-fact-label';
+    var titleAttr = tooltip ? ' title="' + tooltip + '"' : '';
+    row.innerHTML = '<span class="' + labelClass + '"' + titleAttr + '>' + label + '</span><span class="case-fact-value">' + value + '</span>';
     return row;
   };
 
-  /** Renders the scenario's risk markers into the panel next to the quadrant. */
+  /** Renders the scenario's risk markers into the panel next to the quadrant, each clickable. */
   AnswerSummary.prototype._renderMarkerPanel = function (scenario) {
-    var primary = KDQ.getMarker(scenario.primaryMarker);
-    var tags = '<span class="marker-tag marker-tag-primary" title="' + KDQ.i18n.tr(primary.definition) + '">' +
-      scenario.primaryMarker + ' — ' + primary.label + '</span>';
+    var self = this;
+    var label = document.createElement('p');
+    label.className = 'marker-panel-label';
+    label.textContent = KDQ.i18n.t('case.markers');
 
-    scenario.secondaryMarkers.forEach(function (code) {
+    var tagsWrap = document.createElement('div');
+    tagsWrap.className = 'marker-tags';
+
+    var codes = [scenario.primaryMarker].concat(scenario.secondaryMarkers || []);
+    codes.forEach(function (code, index) {
       var marker = KDQ.getMarker(code);
-      tags += '<span class="marker-tag" title="' + KDQ.i18n.tr(marker.definition) + '">' + code + ' — ' + marker.label + '</span>';
+      var tag = document.createElement('button');
+      tag.type = 'button';
+      tag.className = index === 0 ? 'marker-tag marker-tag-primary' : 'marker-tag';
+      tag.title = KDQ.i18n.tr(marker.definition);
+      tag.textContent = code + ' — ' + marker.label;
+      tag.addEventListener('click', function () {
+        if (typeof self.onSelectMarker === 'function') self.onSelectMarker(code);
+      });
+      tagsWrap.appendChild(tag);
     });
 
-    this.markerContainer.innerHTML =
-      '<p class="marker-panel-label">' + KDQ.i18n.t('case.markers') + '</p>' +
-      '<div class="marker-tags">' + tags + '</div>';
+    this.markerContainer.innerHTML = '';
+    this.markerContainer.appendChild(label);
+    this.markerContainer.appendChild(tagsWrap);
     this.markerContainer.classList.remove('hidden');
   };
 

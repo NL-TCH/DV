@@ -56,11 +56,19 @@
     }
   };
 
-  /** Applies data-i18n="key" text content to every matching element under root. */
+  /**
+   * Applies data-i18n="key" text content, and data-i18n-placeholder="key"
+   * placeholder attributes, to every matching element under root.
+   */
   KDQ.applyStaticStrings = function (root) {
     var nodes = root.querySelectorAll('[data-i18n]');
     for (var i = 0; i < nodes.length; i++) {
       nodes[i].textContent = KDQ.i18n.t(nodes[i].getAttribute('data-i18n'));
+    }
+
+    var placeholderNodes = root.querySelectorAll('[data-i18n-placeholder]');
+    for (var j = 0; j < placeholderNodes.length; j++) {
+      placeholderNodes[j].setAttribute('placeholder', KDQ.i18n.t(placeholderNodes[j].getAttribute('data-i18n-placeholder')));
     }
   };
 

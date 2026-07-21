@@ -115,15 +115,30 @@ h1{
   background:var(--maroon);
 }
 
+.has-tooltip{
+  cursor:help;
+  text-decoration:underline dotted var(--muted-soft);
+  text-underline-offset:3px;
+}
+
+.intro-line{
+  font-size:15px;
+  color:var(--ink);
+  line-height:1.55;
+  max-width:48ch;
+  margin:0 0 24px;
+}
+
 /* ---- start/about tabs ---- */
 .view-tabs{
   display:flex;
+  flex-wrap:wrap;
   gap:2px;
   width:fit-content;
   margin-bottom:28px;
 }
 .view-tab{
-  padding:9px 18px;
+  padding:9px 14px;
   border:none;
   background:var(--ink);
   color:#fff;
@@ -163,8 +178,18 @@ h1{
   margin-top:10px;
 }
 
-/* ---- scenario picker ---- */
-.scenario-picker{margin-bottom:20px;}
+/* ---- risk markers overview (rendered as filter checkboxes, see .filter-check-list below) ---- */
+.marker-empty-hint{
+  font-size:13.5px;
+  color:var(--muted);
+  margin:18px 0 0;
+}
+
+/* ---- about DV / about the data (right column) ---- */
+.about-content .about-heading{margin-top:0;}
+.about-content{max-width:64ch;}
+
+/* ---- scenario browser (search/filter/list) ---- */
 .step-heading-block{margin-bottom:20px;}
 .step-heading{
   font-family:var(--font-mono);
@@ -180,42 +205,267 @@ h1{
   margin:0 0 12px;
   line-height:1.5;
 }
-.scenario-select{
+
+.filter-panel{
+  margin-bottom:22px;
+  padding-bottom:18px;
+  border-bottom:1px solid var(--rule);
+}
+.scenario-search-row{
+  display:flex;
+  gap:8px;
+  margin-bottom:16px;
+}
+.scenario-search{
+  flex:1;
+  min-width:0;
   width:100%;
-  padding:13px 40px 13px 16px;
+  padding:12px 16px;
+  border:1px solid var(--rule);
+  background:#fff;
+  font-family:var(--font-body);
+  font-size:14px;
+  color:var(--ink);
+}
+.scenario-search:focus-visible{outline:2px solid var(--maroon); outline-offset:1px;}
+
+.scenario-sort-select{
+  flex:0 0 auto;
+  padding:10px 30px 10px 12px;
   border:1px solid var(--rule);
   background-color:#fff;
   font-family:var(--font-body);
-  font-size:14.5px;
+  font-size:13px;
   color:var(--ink);
   cursor:pointer;
   appearance:none;
   -webkit-appearance:none;
   background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23767676' d='M5 7l5 6 5-6z'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
-  background-position:right 14px center;
-  background-size:14px;
+  background-position:right 8px center;
+  background-size:12px;
 }
-.scenario-select:hover{border-color:var(--slate);}
-.scenario-select:focus-visible{outline:2px solid var(--maroon); outline-offset:2px;}
+.scenario-sort-select:hover{border-color:var(--slate);}
+.scenario-sort-select:focus-visible{outline:2px solid var(--maroon); outline-offset:1px;}
 
-.or-divider{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin:0 0 26px;
+.filter-group{margin-bottom:16px;}
+.filter-group:last-child{margin-bottom:0;}
+.filter-group-label{
   font-family:var(--font-mono);
   font-size:11px;
   letter-spacing:.08em;
   text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 8px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--rule);
+}
+
+/* ---- collapsible filter group (Risicomarker / DV-type) ---- */
+.filter-group-toggle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  background:none;
+  border:none;
+  border-bottom:1px solid var(--rule);
+  padding:0 0 8px;
+  margin:0 0 8px;
+  cursor:pointer;
+  font-family:inherit;
+}
+.filter-group-toggle .filter-group-label{
+  flex:1;
+  text-align:left;
+  margin:0;
+  padding:0;
+  border-bottom:none;
+  transition:color .15s ease;
+}
+.filter-group-toggle:hover .filter-group-label{color:var(--maroon);}
+.filter-group-toggle:focus-visible{outline:2px solid var(--maroon); outline-offset:2px;}
+.filter-group-badge{
+  flex:0 0 auto;
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:#fff;
+  background:var(--maroon);
+  border-radius:999px;
+  padding:1px 7px;
+}
+.filter-group-badge.hidden{display:none;}
+.filter-group-chevron{
+  flex:0 0 auto;
+  font-size:10px;
+  color:var(--muted-soft);
+  transition:transform .15s ease;
+}
+.filter-group-toggle.open .filter-group-chevron{transform:rotate(180deg);}
+.filter-check-list.collapsed{display:none;}
+
+/* ---- risk-marker filter checklist (full marker names, never just the code) ---- */
+.filter-check-list{
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+  max-height:340px;
+  overflow-y:auto;
+}
+.filter-check-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 4px;
+  cursor:pointer;
+  border-radius:2px;
+}
+.filter-check-row:hover{background:#faf9f7;}
+.filter-checkbox{
+  position:absolute;
+  opacity:0;
+  width:1px;
+  height:1px;
+}
+.filter-check-box{
+  width:16px;
+  height:16px;
+  flex:0 0 auto;
+  border:1.5px solid var(--rule);
+  background:#fff;
+  position:relative;
+  transition:border-color .15s ease, background .15s ease;
+}
+.filter-checkbox:checked + .filter-check-box{
+  background:var(--ink);
+  border-color:var(--ink);
+}
+.filter-checkbox:checked + .filter-check-box::after{
+  content:'';
+  position:absolute;
+  left:4px;
+  top:1px;
+  width:5px;
+  height:9px;
+  border:solid #fff;
+  border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+.filter-checkbox:focus-visible + .filter-check-box{outline:2px solid var(--maroon); outline-offset:2px;}
+.filter-check-label{
+  flex:1;
+  min-width:0;
+  font-size:13.5px;
+  color:var(--ink);
+}
+.filter-check-count{
+  flex:0 0 auto;
+  font-family:var(--font-mono);
+  font-size:11px;
   color:var(--muted-soft);
 }
-.or-divider::before,
-.or-divider::after{
-  content:"";
-  flex:1;
-  height:1px;
+
+.year-slider{padding:6px 4px 0;}
+.year-slider-track-wrap{
+  position:relative;
+  height:20px;
+  display:flex;
+  align-items:center;
+}
+.year-slider-track{
+  position:absolute;
+  left:0; right:0;
+  height:3px;
   background:var(--rule);
+  border-radius:2px;
+}
+.year-slider-range{
+  position:absolute;
+  height:3px;
+  background:var(--maroon);
+  border-radius:2px;
+}
+.year-range{
+  position:absolute;
+  left:0; right:0;
+  width:100%;
+  margin:0;
+  -webkit-appearance:none;
+  appearance:none;
+  background:transparent;
+  pointer-events:none;
+}
+.year-range::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  pointer-events:auto;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:var(--ink);
+  border:2px solid #fff;
+  box-shadow:0 0 0 1px var(--rule);
+  cursor:pointer;
+}
+.year-range::-moz-range-thumb{
+  pointer-events:auto;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:var(--ink);
+  border:2px solid #fff;
+  box-shadow:0 0 0 1px var(--rule);
+  cursor:pointer;
+}
+.year-range::-webkit-slider-runnable-track{background:transparent;}
+.year-range::-moz-range-track{background:transparent;}
+.year-range:first-of-type{z-index:1;}
+.year-range:last-of-type{z-index:2;}
+.year-range:focus-visible::-webkit-slider-thumb{outline:2px solid var(--maroon); outline-offset:1px;}
+.year-slider-labels{
+  display:flex;
+  justify-content:space-between;
+  margin-top:8px;
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--muted);
+}
+
+.scenario-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-height:600px;
+  overflow-y:auto;
+}
+.scenario-row{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  width:100%;
+  text-align:left;
+  background:#fff;
+  border:1px solid var(--rule);
+  padding:12px 14px;
+  cursor:pointer;
+  transition:border-color .15s ease, background .15s ease;
+}
+.scenario-row:hover{border-color:var(--slate); background:#fbf9f8;}
+.scenario-row:focus-visible{outline:2px solid var(--maroon); outline-offset:2px;}
+.scenario-row-name{
+  font-size:14px;
+  color:var(--ink);
+  font-weight:500;
+}
+.scenario-row-meta{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.03em;
+  color:var(--muted);
+}
+.scenario-empty{
+  font-size:14px;
+  color:var(--muted);
+  margin:0;
 }
 
 /* ---- answer summary (result view) ---- */
@@ -299,14 +549,19 @@ h1{
   font-size:11px;
   letter-spacing:.02em;
   color:var(--slate);
+  background:#fff;
   border:1px solid var(--rule);
   padding:4px 8px;
-  cursor:default;
+  cursor:pointer;
+  transition:border-color .15s ease, background .15s ease, color .15s ease;
 }
+.marker-tag:hover{border-color:var(--maroon); background:var(--maroon); color:#fff;}
+.marker-tag:focus-visible{outline:2px solid var(--maroon); outline-offset:2px;}
 .marker-tag-primary{
   color:var(--maroon);
   border-color:var(--maroon);
 }
+.marker-tag-primary:hover{background:var(--maroon); color:#fff;}
 
 .case-sources{
   display:flex;
@@ -446,6 +701,7 @@ button{font-family:var(--font-mono); font-size:13px; letter-spacing:.06em;}
   font-weight:600;
   fill:var(--ink);
 }
+.axis-label-primary.has-tooltip{text-underline-offset:4px;}
 .axis-label-secondary{
   font-family:var(--font-body);
   font-style:italic;

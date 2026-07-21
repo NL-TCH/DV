@@ -15,19 +15,40 @@ KDQ.STRINGS = {
   "hero.title": { "nl": "Threat analysis by the Dual Vulnerabilities framework", "en": "Threat analysis by the Dual Vulnerabilities framework" },
   "hero.subtitle": { "nl": "Een systemische cyberrisico-lens voor leergerichte post-mortem breach-analyse.", "en": "A systemic cyber-risk lens for learning-oriented post-mortem breach analysis." },
 
-  "scenario.heading": { "nl": "Een gedocumenteerde databreach-case", "en": "A documented data-breach case" },
-  "scenario.hint": { "nl": "16 gedocumenteerde databreaches — kies er één.", "en": "16 documented data breaches — pick one." },
-  "scenario.placeholder": { "nl": "Kies een gedocumenteerde databreach-case…", "en": "Pick a documented data-breach case…" },
+  "intro.line": { "nl": "Een dual vulnerability ontstaat wanneer wat je organisatie weet niet overeenkomt met wat ze doet — deze tool laat zien welk patroon dat oplevert.", "en": "A dual vulnerability arises when what your organization knows doesn't match what it actually does — this tool shows which pattern that creates." },
+
+  "scenario.heading": { "nl": "Gedocumenteerde databreach-cases", "en": "Documented data-breach cases" },
+  "scenario.hint": { "nl": "Zoek, filter of blader door de gedocumenteerde databreaches.", "en": "Search, filter or browse the documented data breaches." },
+  "scenario.searchPlaceholder": { "nl": "Zoek op naam…", "en": "Search by name…" },
+  "scenario.sortAriaLabel": { "nl": "Sorteren op", "en": "Sort by" },
+  "scenario.sortYearDesc": { "nl": "Jaar (nieuw–oud)", "en": "Year (newest–oldest)" },
+  "scenario.sortYearAsc": { "nl": "Jaar (oud–nieuw)", "en": "Year (oldest–newest)" },
+  "scenario.sortNameAsc": { "nl": "Naam (A–Z)", "en": "Name (A–Z)" },
+  "scenario.sortNameDesc": { "nl": "Naam (Z–A)", "en": "Name (Z–A)" },
+  "scenario.filterMarkerLabel": { "nl": "Risicomarker", "en": "Risk marker" },
+  "scenario.filterTypeLabel": { "nl": "DV-type", "en": "DV type" },
+  "scenario.filterYearLabel": { "nl": "Periode", "en": "Timeframe" },
+  "scenario.noResults": { "nl": "Geen scenario's gevonden voor deze zoekopdracht/filters.", "en": "No scenarios found for this search/filter combination." },
 
   "or-divider": { "nl": "of", "en": "or" },
 
   "diagram.heading": { "nl": "Een interactief kwadrant", "en": "An interactive quadrant" },
   "diagram.hint": { "nl": "Klik op een lijn, bolletje of tekst hieronder voor meer uitleg over dat type DV.", "en": "Click a line, dot or label below to read more about that DV type." },
 
-  "tabs.start": { "nl": "Start", "en": "Start" },
+  "tabs.overview": { "nl": "Overview", "en": "Overview" },
+  "tabs.scenarios": { "nl": "Scenario's", "en": "Scenarios" },
+  "tabs.markers": { "nl": "Risicomarkers", "en": "Risk markers" },
   "tabs.about": { "nl": "Over DV", "en": "About DV" },
   "tabs.dataset": { "nl": "Over de data", "en": "About the data" },
 
+  "markers.heading": { "nl": "Alle risicomarkers", "en": "All risk markers" },
+  "markers.hint": { "nl": "Selecteer een of meerdere markers om te zien in welke scenario's dit patroon voorkomt.", "en": "Select one or more markers to see the scenarios in which this pattern occurs." },
+  "markers.backToList": { "nl": "Alle markers", "en": "All markers" },
+  "markers.scenarioSingular": { "nl": "scenario", "en": "scenario" },
+  "markers.scenarioPlural": { "nl": "scenario's", "en": "scenarios" },
+  "markers.selectPrompt": { "nl": "Selecteer een risicomarker hierboven om scenario's te zien.", "en": "Select a risk marker above to see matching scenarios." },
+
+  "about.teaserHint": { "nl": "Lees de theorie achter het dual vulnerability-model.", "en": "Read the theory behind the dual vulnerability model." },
   "about.heading": { "nl": "Wat is Dual Vulnerabilities?", "en": "What is Dual Vulnerabilities?" },
   "about.intro": { "nl": "De meeste organisaties behandelen cyberrisico als een 'whack-a-mole'-spel: kwetsbaarheden worden één voor één gepatcht, los van elkaar. Maar risico's staan niet op zichzelf — ze wisselwerken en kunnen samen een veel grotere, niet-lineaire impact veroorzaken dan de som van de losse delen.", "en": "Most organizations treat cyber risk as a game of whack-a-mole: vulnerabilities get patched one by one, in isolation. But risks don't exist in isolation — they interact, and together can cause a much larger, non-linear impact than the sum of their parts." },
   "about.sub1": { "nl": "Het dual vulnerability-concept", "en": "The dual vulnerability concept" },
@@ -63,6 +84,14 @@ KDQ.STRINGS = {
 
   "answers.quizSource": { "nl": "Jouw antwoorden", "en": "Your answers" },
   "answers.scenarioSourcePrefix": { "nl": "Onderzochte case — ", "en": "Researched case — " },
+
+  "tooltip.doctrinal": { "nl": "De formele strategie, het beleid en de bedoelde manier van werken.", "en": "The formal strategy, policy and intended way of working." },
+  "tooltip.material": { "nl": "Hoe het werk in de praktijk daadwerkelijk gebeurt.", "en": "How the work actually happens in practice." },
+  "tooltip.knowing": { "nl": "Wat je organisatie weet of zou moeten weten.", "en": "What your organization knows or should know." },
+  "tooltip.doing": { "nl": "Wat je organisatie daadwerkelijk doet.", "en": "What your organization actually does." },
+  "tooltip.dvConfidence": { "nl": "Hoe zeker de onderzoekers zijn dat dit patroon de juiste classificatie is voor deze case.", "en": "How confident the researchers are that this pattern is the right classification for this case." },
+  "tooltip.knowingDoingAxis": { "nl": "Meet het verschil tussen wat je organisatie weet en wat ze daadwerkelijk doet.", "en": "Measures the gap between what your organization knows and what it actually does." },
+  "tooltip.doctrinalMaterialAxis": { "nl": "Meet het verschil tussen het formele beleid en de operationele praktijk.", "en": "Measures the gap between formal policy and operational practice." },
 
   "case.breachType": { "nl": "Breach type", "en": "Breach type" },
   "case.confidence": { "nl": "DV-confidence", "en": "DV confidence" },
