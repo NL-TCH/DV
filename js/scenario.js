@@ -255,7 +255,9 @@
     }
 
     matches.forEach(function (scenario) {
-      self.listContainer.appendChild(buildScenarioRow(scenario, self.onSelect ? function (s) { self.onSelect(s); } : null));
+      self.listContainer.appendChild(buildScenarioRow(scenario, function (s) {
+        if (typeof self.onSelect === 'function') self.onSelect(s);
+      }));
     });
   };
 
