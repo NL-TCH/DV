@@ -25,6 +25,7 @@ KDQ.STRINGS = {
   "scenario.sortYearAsc": { "nl": "Jaar (oud–nieuw)", "en": "Year (oldest–newest)" },
   "scenario.sortNameAsc": { "nl": "Naam (A–Z)", "en": "Name (A–Z)" },
   "scenario.sortNameDesc": { "nl": "Naam (Z–A)", "en": "Name (Z–A)" },
+  "scenario.filtersToggle": { "nl": "Filters", "en": "Filters" },
   "scenario.filterMarkerLabel": { "nl": "Risicomarker", "en": "Risk marker" },
   "scenario.filterTypeLabel": { "nl": "DV-type", "en": "DV type" },
   "scenario.filterYearLabel": { "nl": "Periode", "en": "Timeframe" },
@@ -37,16 +38,8 @@ KDQ.STRINGS = {
 
   "tabs.overview": { "nl": "Overview", "en": "Overview" },
   "tabs.scenarios": { "nl": "Scenario's", "en": "Scenarios" },
-  "tabs.markers": { "nl": "Risicomarkers", "en": "Risk markers" },
   "tabs.about": { "nl": "Over DV", "en": "About DV" },
   "tabs.dataset": { "nl": "Over de data", "en": "About the data" },
-
-  "markers.heading": { "nl": "Alle risicomarkers", "en": "All risk markers" },
-  "markers.hint": { "nl": "Selecteer een of meerdere markers om te zien in welke scenario's dit patroon voorkomt.", "en": "Select one or more markers to see the scenarios in which this pattern occurs." },
-  "markers.backToList": { "nl": "Alle markers", "en": "All markers" },
-  "markers.scenarioSingular": { "nl": "scenario", "en": "scenario" },
-  "markers.scenarioPlural": { "nl": "scenario's", "en": "scenarios" },
-  "markers.selectPrompt": { "nl": "Selecteer een risicomarker hierboven om scenario's te zien.", "en": "Select a risk marker above to see matching scenarios." },
 
   "about.teaserHint": { "nl": "Lees de theorie achter het dual vulnerability-model.", "en": "Read the theory behind the dual vulnerability model." },
   "about.heading": { "nl": "Wat is Dual Vulnerabilities?", "en": "What is Dual Vulnerabilities?" },

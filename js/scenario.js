@@ -1,19 +1,16 @@
 /**
  * ScenarioBrowser renders the researched breach cases as a real,
- * visible-state filter: free-text search, a sort control, a
- * collapsible multi-select risk-marker checklist (full marker names,
- * not codes — OR-match), a collapsible DV-type checklist (OR-match)
- * and a dual-handle year range slider. Picking a scenario reports it
- * via onSelect(scenario).
- *
- * KDQ.buildScenarioRow and KDQ.buildFilterCheckRow/buildMarkerCheckRow
- * are exported so markers-overview.js can reuse the same row/checkbox
- * markup.
+ * visible-state filter: free-text search, a sort control, and one
+ * "Filters" toggle that reveals a panel with a multi-select risk-marker
+ * checklist (full marker names, not codes — OR-match), a multi-select
+ * DV-type checklist (OR-match) and a dual-handle year range slider.
+ * The Filters toggle shows a badge with the total active-filter count
+ * even while collapsed. Picking a scenario reports it via onSelect(scenario).
  */
 (function (KDQ) {
   'use strict';
 
-  KDQ.buildScenarioRow = function (scenario, onSelect) {
+  function buildScenarioRow(scenario, onSelect) {
     var relationship = KDQ.getRelationship(scenario.resultKey || 'none');
 
     var row = document.createElement('button');
@@ -26,17 +23,17 @@
       if (typeof onSelect === 'function') onSelect(scenario);
     });
     return row;
-  };
+  }
 
-  KDQ.renderEmptyScenarioNotice = function (container) {
+  function renderEmptyScenarioNotice(container) {
     var empty = document.createElement('p');
     empty.className = 'scenario-empty';
     empty.textContent = KDQ.i18n.t('scenario.noResults');
     container.appendChild(empty);
-  };
+  }
 
   /** A single filter checkbox row: full label text (never an abbreviation) + a count. */
-  KDQ.buildFilterCheckRow = function (labelText, count, isSelected, onToggle) {
+  function buildFilterCheckRow(labelText, count, isSelected, onToggle) {
     var row = document.createElement('label');
     row.className = 'filter-check-row';
 
@@ -66,26 +63,14 @@
     });
 
     return row;
-  };
+  }
 
-  KDQ.buildMarkerCheckRow = function (code, isSelected, onToggle) {
+  function buildMarkerCheckRow(code, isSelected, onToggle) {
     var marker = KDQ.getMarker(code);
     var count = KDQ.getScenarios().filter(function (s) {
       return [s.primaryMarker].concat(s.secondaryMarkers || []).indexOf(code) !== -1;
     }).length;
-    return KDQ.buildFilterCheckRow(code + ' — ' + marker.label, count, isSelected, onToggle);
-  };
-
-  /** Toggles a collapsible filter group open/closed; returns a fn to update its selected-count badge. */
-  function wireCollapsibleGroup(toggleBtn, listEl, badgeEl) {
-    toggleBtn.addEventListener('click', function () {
-      var collapsed = listEl.classList.toggle('collapsed');
-      toggleBtn.classList.toggle('open', !collapsed);
-    });
-    return function (count) {
-      badgeEl.textContent = count > 0 ? count : '';
-      badgeEl.classList.toggle('hidden', count === 0);
-    };
+    return buildFilterCheckRow(code + ' — ' + marker.label, count, isSelected, onToggle);
   }
 
   var MARKER_ORDER = ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9', 'M10', 'M11'];
@@ -94,9 +79,10 @@
   function ScenarioBrowser(dom) {
     this.searchInput = dom.searchInput;
     this.sortSelect = dom.sortSelect;
-    this.markerToggle = dom.markerToggle;
+    this.filterToggle = dom.filterToggle;
+    this.filterBadge = dom.filterBadge;
+    this.filtersPanel = dom.filtersPanel;
     this.markerChecks = dom.markerChecks;
-    this.typeToggle = dom.typeToggle;
     this.typeChecks = dom.typeChecks;
     this.yearMinRange = dom.yearMinRange;
     this.yearMaxRange = dom.yearMaxRange;
@@ -109,14 +95,14 @@
     this.selectedMarkers = {};
     this.selectedTypes = {};
 
-    this._updateMarkerBadge = wireCollapsibleGroup(this.markerToggle, this.markerChecks, dom.markerBadge);
-    this._updateTypeBadge = wireCollapsibleGroup(this.typeToggle, this.typeChecks, dom.typeBadge);
+    this.filterToggle.addEventListener('click', this._toggleFiltersPanel.bind(this));
 
     this.sortSelect.setAttribute('aria-label', KDQ.i18n.t('scenario.sortAriaLabel'));
     this._computeYearBounds();
     this._setupYearSlider();
     this._renderMarkerChecks();
     this._renderTypeChecks();
+    this._updateFilterBadge();
 
     this.searchInput.addEventListener('input', this._render.bind(this));
     this.sortSelect.addEventListener('change', this._render.bind(this));
@@ -125,6 +111,17 @@
 
     this._render();
   }
+
+  ScenarioBrowser.prototype._toggleFiltersPanel = function () {
+    var collapsed = this.filtersPanel.classList.toggle('collapsed');
+    this.filterToggle.classList.toggle('open', !collapsed);
+  };
+
+  ScenarioBrowser.prototype._updateFilterBadge = function () {
+    var count = this._countSelected(this.selectedMarkers) + this._countSelected(this.selectedTypes);
+    this.filterBadge.textContent = count > 0 ? count : '';
+    this.filterBadge.classList.toggle('hidden', count === 0);
+  };
 
   ScenarioBrowser.prototype._computeYearBounds = function () {
     var years = KDQ.getScenarios()
@@ -175,14 +172,13 @@
     this.markerChecks.innerHTML = '';
 
     MARKER_ORDER.forEach(function (code) {
-      var row = KDQ.buildMarkerCheckRow(code, self.selectedMarkers[code], function (checked) {
+      var row = buildMarkerCheckRow(code, self.selectedMarkers[code], function (checked) {
         self.selectedMarkers[code] = checked;
-        self._updateMarkerBadge(self._countSelected(self.selectedMarkers));
+        self._updateFilterBadge();
         self._render();
       });
       self.markerChecks.appendChild(row);
     });
-    this._updateMarkerBadge(this._countSelected(this.selectedMarkers));
   };
 
   ScenarioBrowser.prototype._renderTypeChecks = function () {
@@ -193,14 +189,13 @@
       var relationship = KDQ.getRelationship(key);
       var count = KDQ.getScenarios().filter(function (s) { return (s.resultKey || 'none') === key; }).length;
 
-      var row = KDQ.buildFilterCheckRow(relationship.title, count, self.selectedTypes[key], function (checked) {
+      var row = buildFilterCheckRow(relationship.title, count, self.selectedTypes[key], function (checked) {
         self.selectedTypes[key] = checked;
-        self._updateTypeBadge(self._countSelected(self.selectedTypes));
+        self._updateFilterBadge();
         self._render();
       });
       self.typeChecks.appendChild(row);
     });
-    this._updateTypeBadge(this._countSelected(this.selectedTypes));
   };
 
   ScenarioBrowser.prototype._countSelected = function (map) {
@@ -255,12 +250,12 @@
     this.listContainer.innerHTML = '';
 
     if (!matches.length) {
-      KDQ.renderEmptyScenarioNotice(this.listContainer);
+      renderEmptyScenarioNotice(this.listContainer);
       return;
     }
 
     matches.forEach(function (scenario) {
-      self.listContainer.appendChild(KDQ.buildScenarioRow(scenario, self.onSelect ? function (s) { self.onSelect(s); } : null));
+      self.listContainer.appendChild(buildScenarioRow(scenario, self.onSelect ? function (s) { self.onSelect(s); } : null));
     });
   };
 
@@ -275,6 +270,7 @@
     this._updateYearSliderVisual();
     this._renderMarkerChecks();
     this._renderTypeChecks();
+    this._updateFilterBadge();
     this._render();
   };
 
@@ -287,6 +283,7 @@
     this._updateYearSliderVisual();
     this._renderMarkerChecks();
     this._renderTypeChecks();
+    this._updateFilterBadge();
     this._render();
   };
 

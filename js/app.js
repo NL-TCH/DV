@@ -1,11 +1,12 @@
 /**
- * Wires QuizEngine + QuizView + ScenarioBrowser + MarkersOverview +
- * AnswerSummary + QuadrantDiagram + RelevanceEngine/View +
- * LanguageSwitch together. The homepage has 5 tabs (Overview,
- * Scenarios, Risk markers, About DV, About the data). Overview is
- * first/default and shows the self-scan quiz next to the live
- * quadrant. Clicking a risk-marker tag on a scenario result jumps to
- * Scenarios pre-filtered to that marker via ScenarioBrowser.filterByMarker().
+ * Wires QuizEngine + QuizView + ScenarioBrowser + AnswerSummary +
+ * QuadrantDiagram + RelevanceEngine/View + LanguageSwitch together.
+ * The homepage has 4 tabs (Overview, Scenarios, About DV, About the
+ * data). Overview is first/default and shows the self-scan quiz next
+ * to the live quadrant. There is no separate Risk markers tab — the
+ * Scenarios tab's own risk-marker filter covers that. Clicking a
+ * risk-marker tag on a scenario result jumps to Scenarios pre-filtered
+ * to that marker via ScenarioBrowser.filterByMarker().
  *
  * Two paths lead to a result:
  * - the manual quiz: answers are scored through KDQ.resolveResultKey.
@@ -38,20 +39,18 @@
     this.tabs = [
       { key: 'overview', btn: root.querySelector('#tabOverviewBtn'), content: root.querySelector('#overviewTab') },
       { key: 'scenarios', btn: root.querySelector('#tabScenariosBtn'), content: root.querySelector('#scenariosTab') },
-      { key: 'markers', btn: root.querySelector('#tabMarkersBtn'), content: root.querySelector('#markersTab') },
       { key: 'about', btn: root.querySelector('#tabAboutBtn'), content: root.querySelector('#aboutTab') },
       { key: 'dataset', btn: root.querySelector('#tabDatasetBtn'), content: root.querySelector('#datasetTab') }
     ];
 
-    // The right column shows one of: the quadrant, the scenario list, the
-    // marker list, or the About DV / About the data content — whichever
-    // matches the active left-column tab — except while a result is
-    // shown, when it always shows the quadrant. 'overview' has no entry
-    // below, so it falls back to the quadrant.
+    // The right column shows one of: the quadrant, the scenario list, or
+    // the About DV / About the data content — whichever matches the
+    // active left-column tab — except while a result is shown, when it
+    // always shows the quadrant. 'overview' has no entry below, so it
+    // falls back to the quadrant.
     this.quadrantPanel = root.querySelector('#quadrantPanel');
     this.rightPanels = {
       scenarios: root.querySelector('#scenarioListPanel'),
-      markers: root.querySelector('#markerListPanel'),
       about: root.querySelector('#aboutContentPanel'),
       dataset: root.querySelector('#datasetContentPanel')
     };
@@ -69,11 +68,10 @@
     this.scenarioBrowser = new KDQ.ScenarioBrowser({
       searchInput: root.querySelector('#scenarioSearchInput'),
       sortSelect: root.querySelector('#scenarioSortSelect'),
-      markerToggle: root.querySelector('#scenarioMarkerToggle'),
-      markerBadge: root.querySelector('#scenarioMarkerBadge'),
+      filterToggle: root.querySelector('#scenarioFilterToggle'),
+      filterBadge: root.querySelector('#scenarioFilterBadge'),
+      filtersPanel: root.querySelector('#scenarioFiltersPanel'),
       markerChecks: root.querySelector('#scenarioMarkerChecks'),
-      typeToggle: root.querySelector('#scenarioTypeToggle'),
-      typeBadge: root.querySelector('#scenarioTypeBadge'),
       typeChecks: root.querySelector('#scenarioTypeChecks'),
       yearMinRange: root.querySelector('#yearMinRange'),
       yearMaxRange: root.querySelector('#yearMaxRange'),
@@ -81,11 +79,6 @@
       yearMaxLabel: root.querySelector('#yearMaxLabel'),
       yearSliderRange: root.querySelector('#yearSliderRange'),
       listContainer: root.querySelector('#scenarioList')
-    });
-
-    this.markersOverview = new KDQ.MarkersOverview({
-      checkContainer: root.querySelector('#markerOverviewChecks'),
-      listContainer: root.querySelector('#markerScenarioList')
     });
 
     this.answerSummary = new KDQ.AnswerSummary({
@@ -136,10 +129,6 @@
     }.bind(this);
 
     this.scenarioBrowser.onSelect = function (scenario) {
-      this.showResult(scenario.resultKey || 'none', { source: 'scenario', scenario: scenario });
-    }.bind(this);
-
-    this.markersOverview.onSelect = function (scenario) {
       this.showResult(scenario.resultKey || 'none', { source: 'scenario', scenario: scenario });
     }.bind(this);
 
@@ -301,7 +290,7 @@
     if (this.relevanceEngine.hasQuestions()) this.relevanceIntro.classList.remove('hidden');
   };
 
-  /** Switches between the homepage tabs (Overview / Scenarios / Risk markers / About DV / About the data). */
+  /** Switches between the homepage tabs (Overview / Scenarios / About DV / About the data). */
   App.prototype._switchTab = function (activeKey) {
     this.tabs.forEach(function (tab) {
       var isActive = tab.key === activeKey;
@@ -320,9 +309,9 @@
 
   /**
    * Right column mirrors the active left-column tab: Scenarios shows
-   * the scenario list, Risk markers shows the marker list, About DV /
-   * About the data show their own content panel, and Overview (no
-   * entry in rightPanels) falls back to the quadrant. showResult()
+   * the scenario list, About DV / About the data show their own
+   * content panel, and Overview (no entry in rightPanels) falls back
+   * to the quadrant. showResult()
    * overrides this back to the quadrant regardless.
    */
   App.prototype._updateRightColumn = function (activeKey) {
@@ -369,7 +358,6 @@
   App.prototype._handleLanguageChange = function () {
     this._applyDocumentStrings();
     this.scenarioBrowser.refresh();
-    this.markersOverview.refresh();
 
     if (this._activeRelationshipKey) {
       // Re-render the currently shown result in the new language — this

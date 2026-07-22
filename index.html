@@ -32,7 +32,6 @@
           <div class="view-tabs">
             <button type="button" class="view-tab active" id="tabOverviewBtn" data-i18n="tabs.overview"></button>
             <button type="button" class="view-tab" id="tabScenariosBtn" data-i18n="tabs.scenarios"></button>
-            <button type="button" class="view-tab" id="tabMarkersBtn" data-i18n="tabs.markers"></button>
             <button type="button" class="view-tab" id="tabAboutBtn" data-i18n="tabs.about"></button>
             <button type="button" class="view-tab" id="tabDatasetBtn" data-i18n="tabs.dataset"></button>
           </div>
@@ -58,11 +57,6 @@
           <div id="scenariosTab" class="hidden">
             <p class="step-heading" data-i18n="scenario.heading"></p>
             <p class="step-hint" data-i18n="scenario.hint"></p>
-          </div>
-
-          <div id="markersTab" class="hidden">
-            <p class="step-heading" data-i18n="markers.heading"></p>
-            <p class="step-hint" data-i18n="markers.hint"></p>
           </div>
 
           <div id="aboutTab" class="hidden">
@@ -166,37 +160,46 @@
 
         <div id="scenarioListPanel" class="hidden">
           <div class="filter-panel">
-            <div class="scenario-search-row">
-              <input type="text" class="scenario-search" id="scenarioSearchInput" data-i18n-placeholder="scenario.searchPlaceholder">
-              <select class="scenario-sort-select" id="scenarioSortSelect">
-                <option value="yearDesc" data-i18n="scenario.sortYearDesc"></option>
-                <option value="yearAsc" data-i18n="scenario.sortYearAsc"></option>
-                <option value="nameAsc" data-i18n="scenario.sortNameAsc"></option>
-                <option value="nameDesc" data-i18n="scenario.sortNameDesc"></option>
-              </select>
-            </div>
+            <input type="text" class="scenario-search" id="scenarioSearchInput" data-i18n-placeholder="scenario.searchPlaceholder">
 
-            <div class="filter-group">
-              <button type="button" class="filter-group-toggle" id="scenarioMarkerToggle">
-                <span class="filter-group-label" data-i18n="scenario.filterMarkerLabel"></span>
-                <span class="filter-group-badge hidden" id="scenarioMarkerBadge"></span>
-                <span class="filter-group-chevron">▾</span>
+            <div class="scenario-toolbar">
+              <button type="button" class="toolbar-btn" id="scenarioFilterToggle">
+                <svg class="toolbar-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M2 3h12l-4.5 5.5v4L7.5 14v-5.5L2 3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+                </svg>
+                <span data-i18n="scenario.filtersToggle"></span>
+                <span class="filter-group-badge hidden" id="scenarioFilterBadge"></span>
+                <span class="toolbar-chevron">▾</span>
               </button>
-              <div class="filter-check-list collapsed" id="scenarioMarkerChecks"></div>
+              <span class="toolbar-divider"></span>
+              <div class="toolbar-sort">
+                <svg class="toolbar-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M5 3v10M5 3L2.5 5.5M5 3l2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M11 13V3M11 13l2.5-2.5M11 13l-2.5-2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <select class="scenario-sort-select" id="scenarioSortSelect">
+                  <option value="yearDesc" data-i18n="scenario.sortYearDesc"></option>
+                  <option value="yearAsc" data-i18n="scenario.sortYearAsc"></option>
+                  <option value="nameAsc" data-i18n="scenario.sortNameAsc"></option>
+                  <option value="nameDesc" data-i18n="scenario.sortNameDesc"></option>
+                </select>
+              </div>
             </div>
 
-            <div class="filter-group">
-              <button type="button" class="filter-group-toggle" id="scenarioTypeToggle">
-                <span class="filter-group-label" data-i18n="scenario.filterTypeLabel"></span>
-                <span class="filter-group-badge hidden" id="scenarioTypeBadge"></span>
-                <span class="filter-group-chevron">▾</span>
-              </button>
-              <div class="filter-check-list collapsed" id="scenarioTypeChecks"></div>
-            </div>
+            <div class="scenario-filters-panel collapsed" id="scenarioFiltersPanel">
+              <div class="filter-group">
+                <p class="filter-group-label" data-i18n="scenario.filterMarkerLabel"></p>
+                <div class="filter-check-list" id="scenarioMarkerChecks"></div>
+              </div>
 
-            <div class="filter-group">
-              <p class="filter-group-label" data-i18n="scenario.filterYearLabel"></p>
-              <div class="year-slider">
+              <div class="filter-group">
+                <p class="filter-group-label" data-i18n="scenario.filterTypeLabel"></p>
+                <div class="filter-check-list" id="scenarioTypeChecks"></div>
+              </div>
+
+              <div class="filter-group">
+                <p class="filter-group-label" data-i18n="scenario.filterYearLabel"></p>
+                <div class="year-slider">
                 <div class="year-slider-track-wrap">
                   <div class="year-slider-track"></div>
                   <div class="year-slider-range" id="yearSliderRange"></div>
@@ -207,16 +210,12 @@
                   <span id="yearMinLabel"></span>
                   <span id="yearMaxLabel"></span>
                 </div>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="scenario-list" id="scenarioList"></div>
-        </div>
-
-        <div id="markerListPanel" class="hidden">
-          <div class="filter-check-list" id="markerOverviewChecks"></div>
-          <div class="scenario-list" id="markerScenarioList"></div>
         </div>
 
         <div id="aboutContentPanel" class="hidden about-content">
@@ -290,7 +289,6 @@
 <script src="js/quadrant.js"></script>
 <script src="js/answers.js"></script>
 <script src="js/scenario.js"></script>
-<script src="js/markers-overview.js"></script>
 <script src="js/quiz.js"></script>
 <script src="js/relevance.js"></script>
 <script src="js/app.js"></script>
