@@ -26,91 +26,67 @@
     <section class="quiz-panel">
       <div class="card">
 
-        <div id="questionView">
-          <p class="intro-line" data-i18n="intro.line"></p>
+        <p class="intro-line" data-i18n="intro.line"></p>
 
-          <div class="view-tabs">
-            <button type="button" class="view-tab active" id="tabOverviewBtn" data-i18n="tabs.overview"></button>
-            <button type="button" class="view-tab" id="tabScenariosBtn" data-i18n="tabs.scenarios"></button>
-            <button type="button" class="view-tab" id="tabAboutBtn" data-i18n="tabs.about"></button>
-            <button type="button" class="view-tab" id="tabDatasetBtn" data-i18n="tabs.dataset"></button>
+        <div class="select-block">
+          <p class="select-label" data-i18n="nav.perspectiveLabel"></p>
+          <div class="perspective-list" id="perspectiveList"></div>
+        </div>
+
+        <div class="select-block hidden" id="selectionBlock">
+          <div class="select-head">
+            <p class="select-label" id="selectionLabel"></p>
+            <button type="button" class="select-back hidden" id="selectionBack"></button>
+          </div>
+          <div id="selectionSearchWrap" class="hidden">
+            <input type="text" class="scenario-search" id="selectionSearch" data-i18n-placeholder="scenario.searchPlaceholder">
           </div>
 
-          <div id="overviewTab">
-            <p class="step-heading" data-i18n="quiz.heading"></p>
-            <p class="step-hint" data-i18n="quiz.hint"></p>
+          <div id="selectionFilters" class="hidden">
+            <button type="button" class="toolbar-btn" id="filterToggle">
+              <svg class="toolbar-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M2 3h12l-4.5 5.5v4L7.5 14v-5.5L2 3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+              </svg>
+              <span data-i18n="filter.toggle"></span>
+              <span class="filter-badge hidden" id="filterBadge"></span>
+              <span class="toolbar-chevron">▾</span>
+            </button>
 
-            <div class="quiz-meta">
-              <span class="step-label" id="stepLabel"></span>
+            <div class="filter-panel collapsed" id="filterPanel">
+              <div class="filter-group">
+                <p class="filter-group-label" data-i18n="filter.industry"></p>
+                <div class="filter-check-list" id="sectorChecks"></div>
+              </div>
+
+              <div class="filter-group">
+                <p class="filter-group-label" data-i18n="filter.country"></p>
+                <div class="filter-check-list filter-check-list-tall" id="countryChecks"></div>
+              </div>
+
+              <div class="filter-group">
+                <p class="filter-group-label" data-i18n="filter.year"></p>
+                <div class="year-slider">
+                  <div class="year-slider-track-wrap">
+                    <div class="year-slider-track"></div>
+                    <div class="year-slider-range" id="yearSliderRange"></div>
+                    <input type="range" class="year-range" id="yearMinRange">
+                    <input type="range" class="year-range" id="yearMaxRange">
+                  </div>
+                  <div class="year-slider-labels">
+                    <span id="yearMinLabel"></span>
+                    <span id="yearMaxLabel"></span>
+                  </div>
+                </div>
+              </div>
+
+              <button type="button" class="filter-clear" id="filterClear" data-i18n="filter.clear"></button>
             </div>
-            <div class="progress-track">
-              <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <h2 class="q-title" id="qTitle"></h2>
-            <div class="options" id="qOptions"></div>
-            <div class="nav-row">
-              <button class="btn btn-ghost" type="button" id="btnBack"></button>
-              <button class="btn btn-primary" type="button" id="btnNext" disabled></button>
-            </div>
           </div>
 
-          <div id="scenariosTab" class="hidden">
-            <p class="step-heading" data-i18n="scenario.heading"></p>
-            <p class="step-hint" data-i18n="scenario.hint"></p>
-          </div>
-
-          <div id="aboutTab" class="hidden">
-            <p class="step-heading" data-i18n="about.heading"></p>
-            <p class="step-hint" data-i18n="about.teaserHint"></p>
-          </div>
-
-          <div id="datasetTab" class="hidden">
-            <p class="step-heading" data-i18n="dataset.heading"></p>
-            <p class="step-hint" data-i18n="dataset.teaserHint"></p>
-          </div>
+          <div class="selection-list" id="selectionList"></div>
         </div>
 
-        <div id="resultView" class="hidden" aria-live="polite">
-          <p class="answer-summary-tag" id="answerSourceTag"></p>
-          <div class="rationale-block hidden" id="rationaleBlock"></div>
-          <div class="answer-summary">
-            <div id="answerContainer"></div>
-          </div>
-
-          <button class="btn btn-ghost" type="button" id="btnRestart" data-i18n="result.restart"></button>
-        </div>
-
-        <div id="relevanceView" class="hidden" aria-live="polite">
-          <div class="quiz-meta">
-            <span class="step-label" id="relevanceStepLabel"></span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="relevanceProgressFill"></div>
-          </div>
-
-          <p class="relevance-question-meta" id="relevanceQuestionMeta"></p>
-          <h2 class="q-title" id="relevanceQuestionText"></h2>
-
-          <div class="relevance-scale" id="relevanceScale"></div>
-          <div class="relevance-scale-labels">
-            <span data-i18n="relevance.scaleLow"></span>
-            <span data-i18n="relevance.scaleHigh"></span>
-          </div>
-
-          <div class="nav-row">
-            <button class="btn btn-ghost" type="button" id="relevanceBack"></button>
-            <button class="btn btn-primary" type="button" id="relevanceNext" disabled></button>
-          </div>
-        </div>
-
-        <div id="relevanceResultView" class="hidden" aria-live="polite">
-          <p class="answer-summary-tag" data-i18n="relevance.scoreLabel"></p>
-          <div class="relevance-summary" id="relevanceSummary"></div>
-          <div class="nav-row">
-            <button class="btn btn-ghost" type="button" id="btnBackToCaseResult" data-i18n="relevance.backToResult"></button>
-            <button class="btn btn-ghost" type="button" id="btnRestartFromRelevance" data-i18n="result.restart"></button>
-          </div>
-        </div>
+        <button type="button" class="dataset-link" id="datasetLink" data-i18n="nav.aboutData"></button>
 
       </div>
     </section>
@@ -118,7 +94,7 @@
     <section class="diagram-panel">
       <div class="card">
 
-        <div id="quadrantPanel">
+        <div id="quadrantBlock">
           <div class="diagram-hint" id="diagramHint">
             <p class="step-heading" data-i18n="diagram.heading"></p>
             <p class="step-hint" data-i18n="diagram.hint"></p>
@@ -158,67 +134,7 @@
           </div>
         </div>
 
-        <div id="scenarioListPanel" class="hidden">
-          <div class="filter-panel">
-            <input type="text" class="scenario-search" id="scenarioSearchInput" data-i18n-placeholder="scenario.searchPlaceholder">
-
-            <div class="scenario-toolbar">
-              <button type="button" class="toolbar-btn" id="scenarioFilterToggle">
-                <svg class="toolbar-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path d="M2 3h12l-4.5 5.5v4L7.5 14v-5.5L2 3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
-                </svg>
-                <span data-i18n="scenario.filtersToggle"></span>
-                <span class="filter-group-badge hidden" id="scenarioFilterBadge"></span>
-                <span class="toolbar-chevron">▾</span>
-              </button>
-              <span class="toolbar-divider"></span>
-              <div class="toolbar-sort">
-                <svg class="toolbar-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path d="M5 3v10M5 3L2.5 5.5M5 3l2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M11 13V3M11 13l2.5-2.5M11 13l-2.5-2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <select class="scenario-sort-select" id="scenarioSortSelect">
-                  <option value="yearDesc" data-i18n="scenario.sortYearDesc"></option>
-                  <option value="yearAsc" data-i18n="scenario.sortYearAsc"></option>
-                  <option value="nameAsc" data-i18n="scenario.sortNameAsc"></option>
-                  <option value="nameDesc" data-i18n="scenario.sortNameDesc"></option>
-                </select>
-              </div>
-            </div>
-
-            <div class="scenario-filters-panel collapsed" id="scenarioFiltersPanel">
-              <div class="filter-group">
-                <p class="filter-group-label" data-i18n="scenario.filterMarkerLabel"></p>
-                <div class="filter-check-list" id="scenarioMarkerChecks"></div>
-              </div>
-
-              <div class="filter-group">
-                <p class="filter-group-label" data-i18n="scenario.filterTypeLabel"></p>
-                <div class="filter-check-list" id="scenarioTypeChecks"></div>
-              </div>
-
-              <div class="filter-group">
-                <p class="filter-group-label" data-i18n="scenario.filterYearLabel"></p>
-                <div class="year-slider">
-                <div class="year-slider-track-wrap">
-                  <div class="year-slider-track"></div>
-                  <div class="year-slider-range" id="yearSliderRange"></div>
-                  <input type="range" class="year-range" id="yearMinRange">
-                  <input type="range" class="year-range" id="yearMaxRange">
-                </div>
-                <div class="year-slider-labels">
-                  <span id="yearMinLabel"></span>
-                  <span id="yearMaxLabel"></span>
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="scenario-list" id="scenarioList"></div>
-        </div>
-
-        <div id="aboutContentPanel" class="hidden about-content">
+        <div id="aboutDvBlock" class="hidden about-content">
           <p class="about-heading" data-i18n="about.heading"></p>
           <p class="about-text" data-i18n="about.intro"></p>
 
@@ -235,7 +151,40 @@
           <p class="about-text" data-i18n="about.text4"></p>
         </div>
 
-        <div id="datasetContentPanel" class="hidden about-content">
+        <div id="markerBlock" class="hidden">
+          <div id="markerBlockBody"></div>
+        </div>
+
+        <div id="stageBlock" class="hidden">
+          <p class="stage-case-name" id="stageCaseName"></p>
+
+          <div class="stage-tabs">
+            <button type="button" class="stage-tab active" id="stageUnderstandBtn">
+              <span class="stage-tab-name" data-i18n="stage.understand"></span>
+              <span class="stage-tab-hint" data-i18n="stage.understandHint"></span>
+            </button>
+            <button type="button" class="stage-tab" id="stageLearnBtn">
+              <span class="stage-tab-name" data-i18n="stage.learn"></span>
+              <span class="stage-tab-hint" data-i18n="stage.learnHint"></span>
+            </button>
+            <button type="button" class="stage-tab" id="stageExtractBtn">
+              <span class="stage-tab-name" data-i18n="stage.extract"></span>
+              <span class="stage-tab-hint" data-i18n="stage.extractHint"></span>
+            </button>
+          </div>
+
+          <div id="understandStage"></div>
+
+          <div id="learnStageWrap" class="hidden">
+            <p class="stage-hint" data-i18n="learn.hint"></p>
+            <p class="learn-progress" id="learnProgress"></p>
+            <div id="learnStage"></div>
+          </div>
+
+          <div id="extractStage" class="hidden"></div>
+        </div>
+
+        <div id="datasetBlock" class="hidden about-content">
           <p class="about-heading" data-i18n="dataset.heading"></p>
           <p class="about-text" data-i18n="dataset.intro"></p>
 
@@ -256,18 +205,6 @@
       </div>
     </section>
 
-    <section class="markers-panel hidden" id="markersPanelSection">
-      <div class="card">
-        <div class="marker-panel" id="markerPanel"></div>
-
-        <div class="relevance-intro hidden" id="relevanceIntro">
-          <p class="step-heading" data-i18n="relevance.heading"></p>
-          <p class="step-hint" data-i18n="relevance.hint"></p>
-          <button class="btn btn-ghost" type="button" id="btnStartRelevance" data-i18n="relevance.startButton"></button>
-        </div>
-      </div>
-    </section>
-
   </main>
 
   <footer class="footnote">
@@ -283,14 +220,17 @@
 
 <script src="data/strings.js"></script>
 <script src="data/content.js"></script>
+<!-- generated from the research workbook by tools/build-scenarios.ps1 -->
+<script src="data/scenarios.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/lang-switch.js"></script>
 <script src="js/config.js"></script>
 <script src="js/quadrant.js"></script>
-<script src="js/answers.js"></script>
-<script src="js/scenario.js"></script>
-<script src="js/quiz.js"></script>
-<script src="js/relevance.js"></script>
+<script src="js/gauge.js"></script>
+<script src="js/navigator.js"></script>
+<script src="js/understand.js"></script>
+<script src="js/learn.js"></script>
+<script src="js/extract.js"></script>
 <script src="js/app.js"></script>
 
 </body>

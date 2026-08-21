@@ -1,110 +1,66 @@
 /**
- * Wires QuizEngine + QuizView + ScenarioBrowser + AnswerSummary +
- * QuadrantDiagram + RelevanceEngine/View + LanguageSwitch together.
- * The homepage has 4 tabs (Overview, Scenarios, About DV, About the
- * data). Overview is first/default and shows the self-scan quiz next
- * to the live quadrant. There is no separate Risk markers tab — the
- * Scenarios tab's own risk-marker filter covers that. Clicking a
- * risk-marker tag on a scenario result jumps to Scenarios pre-filtered
- * to that marker via ScenarioBrowser.filterByMarker().
+ * Wires Navigator + the three Bloom study stages + QuadrantDiagram +
+ * LanguageSwitch together.
  *
- * Two paths lead to a result:
- * - the manual quiz: answers are scored through KDQ.resolveResultKey.
- * - a researched scenario: its "resultKey" is the classification the
- *   research already assigned, used as-is (see data/content.js).
+ * The left column asks one question at a time: which learning
+ * perspective (cyber breach / risk markers / dual vulnerability), then
+ * what to select within it. The right column answers it — and once a
+ * breach is picked, it becomes the study surface with three stages
+ * following Bloom's progression:
  *
- * A scenario result can additionally lead into the relevance check —
- * a separate, question-by-question sub-flow (own button, own "page")
- * reachable only from a scenario result, since it's derived from that
- * scenario's risk markers.
+ * - Understand: the documented facts of the case, read-only.
+ * - Learn: the user scores the case's risk markers against their own
+ *   organisation (relevance, business case, requisite-variety gap).
+ * - Extract: those scores become a ranked lessons-learned report and a
+ *   ROSI/urgency bubble chart.
  *
- * On a language change, the app re-renders whichever view is
- * currently active instead of reloading, so state (quiz progress or
- * the shown result) survives the switch — except mid-relevance-check
- * progress, which resets back to the case result on a language swap.
+ * On a language change the app re-renders whatever is currently shown
+ * instead of reloading, so navigation position and any Learn scores
+ * already entered survive the switch.
  */
 (function (KDQ) {
   'use strict';
 
   function App(root) {
     this.root = root;
-    this.questionView = root.querySelector('#questionView');
-    this.resultView = root.querySelector('#resultView');
-    this.relevanceViewEl = root.querySelector('#relevanceView');
-    this.relevanceResultView = root.querySelector('#relevanceResultView');
-    this.relevanceIntro = root.querySelector('#relevanceIntro');
-    this._activeRelationshipKey = null;
+    this.activeScenario = null;
     this._previewKey = null;
 
-    this.tabs = [
-      { key: 'overview', btn: root.querySelector('#tabOverviewBtn'), content: root.querySelector('#overviewTab') },
-      { key: 'scenarios', btn: root.querySelector('#tabScenariosBtn'), content: root.querySelector('#scenariosTab') },
-      { key: 'about', btn: root.querySelector('#tabAboutBtn'), content: root.querySelector('#aboutTab') },
-      { key: 'dataset', btn: root.querySelector('#tabDatasetBtn'), content: root.querySelector('#datasetTab') }
-    ];
-
-    // The right column shows one of: the quadrant, the scenario list, or
-    // the About DV / About the data content — whichever matches the
-    // active left-column tab — except while a result is shown, when it
-    // always shows the quadrant. 'overview' has no entry below, so it
-    // falls back to the quadrant.
-    this.quadrantPanel = root.querySelector('#quadrantPanel');
-    this.rightPanels = {
-      scenarios: root.querySelector('#scenarioListPanel'),
-      about: root.querySelector('#aboutContentPanel'),
-      dataset: root.querySelector('#datasetContentPanel')
-    };
-
-    this.engine = new KDQ.QuizEngine(KDQ.getQuestions());
-    this.quizView = new KDQ.QuizView(this.engine, {
-      stepLabel: root.querySelector('#stepLabel'),
-      progressFill: root.querySelector('#progressFill'),
-      qTitle: root.querySelector('#qTitle'),
-      qOptions: root.querySelector('#qOptions'),
-      btnBack: root.querySelector('#btnBack'),
-      btnNext: root.querySelector('#btnNext')
-    });
-
-    this.scenarioBrowser = new KDQ.ScenarioBrowser({
-      searchInput: root.querySelector('#scenarioSearchInput'),
-      sortSelect: root.querySelector('#scenarioSortSelect'),
-      filterToggle: root.querySelector('#scenarioFilterToggle'),
-      filterBadge: root.querySelector('#scenarioFilterBadge'),
-      filtersPanel: root.querySelector('#scenarioFiltersPanel'),
-      markerChecks: root.querySelector('#scenarioMarkerChecks'),
-      typeChecks: root.querySelector('#scenarioTypeChecks'),
+    this.navigator = new KDQ.Navigator({
+      perspectiveList: root.querySelector('#perspectiveList'),
+      selectionBlock: root.querySelector('#selectionBlock'),
+      selectionLabel: root.querySelector('#selectionLabel'),
+      selectionBack: root.querySelector('#selectionBack'),
+      searchWrap: root.querySelector('#selectionSearchWrap'),
+      searchInput: root.querySelector('#selectionSearch'),
+      selectionList: root.querySelector('#selectionList'),
+      filtersWrap: root.querySelector('#selectionFilters'),
+      filterToggle: root.querySelector('#filterToggle'),
+      filterBadge: root.querySelector('#filterBadge'),
+      filterPanel: root.querySelector('#filterPanel'),
+      sectorChecks: root.querySelector('#sectorChecks'),
+      countryChecks: root.querySelector('#countryChecks'),
+      filterClear: root.querySelector('#filterClear'),
       yearMinRange: root.querySelector('#yearMinRange'),
       yearMaxRange: root.querySelector('#yearMaxRange'),
       yearMinLabel: root.querySelector('#yearMinLabel'),
       yearMaxLabel: root.querySelector('#yearMaxLabel'),
-      yearSliderRange: root.querySelector('#yearSliderRange'),
-      listContainer: root.querySelector('#scenarioList')
+      yearSliderRange: root.querySelector('#yearSliderRange')
     });
 
-    this.answerSummary = new KDQ.AnswerSummary({
-      sourceTag: root.querySelector('#answerSourceTag'),
-      container: root.querySelector('#answerContainer'),
-      markerContainer: root.querySelector('#markerPanel'),
-      rationaleContainer: root.querySelector('#rationaleBlock')
+    this.understandView = new KDQ.UnderstandView({
+      container: root.querySelector('#understandStage')
     });
 
-    this.layoutEl = root.querySelector('.layout');
-    this.markersPanelSection = root.querySelector('#markersPanelSection');
-
-    this.relevanceEngine = new KDQ.RelevanceEngine();
-    this.relevanceView = new KDQ.RelevanceView(this.relevanceEngine, {
-      stepLabel: root.querySelector('#relevanceStepLabel'),
-      progressFill: root.querySelector('#relevanceProgressFill'),
-      questionMeta: root.querySelector('#relevanceQuestionMeta'),
-      questionText: root.querySelector('#relevanceQuestionText'),
-      scale: root.querySelector('#relevanceScale'),
-      btnBack: root.querySelector('#relevanceBack'),
-      btnNext: root.querySelector('#relevanceNext')
+    this.learnEngine = new KDQ.LearnEngine();
+    this.learnView = new KDQ.LearnView(this.learnEngine, {
+      container: root.querySelector('#learnStage'),
+      progress: root.querySelector('#learnProgress')
     });
-    this.relevanceSummary = root.querySelector('#relevanceSummary');
-    this.btnStartRelevance = root.querySelector('#btnStartRelevance');
-    this.btnBackToCaseResult = root.querySelector('#btnBackToCaseResult');
-    this.btnRestartFromRelevance = root.querySelector('#btnRestartFromRelevance');
+
+    this.extractView = new KDQ.ExtractView({
+      container: root.querySelector('#extractStage')
+    });
 
     this.diagram = new KDQ.QuadrantDiagram({
       resultGroup: root.querySelector('#resultGroup'),
@@ -114,239 +70,205 @@
       resultTagText: root.querySelector('#resultTagText')
     });
 
+    // Right-column blocks, shown in combinations by _showBlocks().
+    this.blocks = {
+      quadrant: root.querySelector('#quadrantBlock'),
+      aboutDv: root.querySelector('#aboutDvBlock'),
+      marker: root.querySelector('#markerBlock'),
+      stage: root.querySelector('#stageBlock'),
+      dataset: root.querySelector('#datasetBlock')
+    };
+
+    this.stages = [
+      { key: 'understand', btn: root.querySelector('#stageUnderstandBtn'), content: root.querySelector('#understandStage') },
+      { key: 'learn', btn: root.querySelector('#stageLearnBtn'), content: root.querySelector('#learnStageWrap') },
+      { key: 'extract', btn: root.querySelector('#stageExtractBtn'), content: root.querySelector('#extractStage') }
+    ];
+    this.activeStage = 'understand';
+
+    this.diagramHint = root.querySelector('#diagramHint');
     this.resultTypeBlock = root.querySelector('#resultTypeBlock');
     this.resultTitle = root.querySelector('#resultTitle');
     this.resultText = root.querySelector('#resultText');
-    this.diagramHint = root.querySelector('#diagramHint');
-    this.btnRestart = root.querySelector('#btnRestart');
+    this.stageCaseName = root.querySelector('#stageCaseName');
+    this.markerBlockBody = root.querySelector('#markerBlockBody');
+    this.datasetLink = root.querySelector('#datasetLink');
     this.homeLink = root.querySelector('#homeLink');
 
     this.languageSwitch = new KDQ.LanguageSwitch(root.querySelector('#langSwitch'));
 
-    this.quizView.onComplete = function () {
-      var answers = Object.assign({}, this.engine.answers);
-      this.showResult(KDQ.resolveResultKey(answers), { source: 'quiz', answers: answers });
-    }.bind(this);
-
-    this.scenarioBrowser.onSelect = function (scenario) {
-      this.showResult(scenario.resultKey || 'none', { source: 'scenario', scenario: scenario });
-    }.bind(this);
-
-    this.answerSummary.onSelectMarker = function (code) {
-      this._goToFilteredScenarios(code);
-    }.bind(this);
-
+    this.navigator.onPerspective = this._handlePerspective.bind(this);
+    this.navigator.onDrill = this._handleDrill.bind(this);
+    this.navigator.onSelectScenario = this._handleSelectScenario.bind(this);
+    this.understandView.onSelectMarker = this._handleMarkerLink.bind(this);
     this.diagram.onSelectRelationship = this._handleLegendPreview.bind(this);
 
-    this.btnStartRelevance.addEventListener('click', this._startRelevanceCheck.bind(this));
-    this.relevanceView.onComplete = this._finishRelevanceCheck.bind(this);
-    this.btnBackToCaseResult.addEventListener('click', this._backToCaseResult.bind(this));
-    this.btnRestartFromRelevance.addEventListener('click', this.restart.bind(this));
-
-    this.btnRestart.addEventListener('click', this.restart.bind(this));
-    this.homeLink.addEventListener('click', this.restart.bind(this));
-
-    this.tabs.forEach(function (tab) {
-      tab.btn.addEventListener('click', function () { this._switchTab(tab.key); }.bind(this));
+    this.stages.forEach(function (stage) {
+      stage.btn.addEventListener('click', function () { this._switchStage(stage.key); }.bind(this));
     }, this);
+
+    this.datasetLink.addEventListener('click', this._showDataset.bind(this));
+    this.homeLink.addEventListener('click', this.restart.bind(this));
 
     KDQ.i18n.onChange(this._handleLanguageChange.bind(this));
 
     this._applyDocumentStrings();
-    this.diagram.showLegend();
-    this._switchTab('overview');
-    this.quizView.render();
+    this._showIntro();
   }
 
-  /** A legend line/dot/label was clicked on the idle homepage — preview its explanation, no other state changes. */
+  // ---- right-column block visibility ----
+
+  App.prototype._showBlocks = function (visibleKeys) {
+    Object.keys(this.blocks).forEach(function (key) {
+      this.blocks[key].classList.toggle('hidden', visibleKeys.indexOf(key) === -1);
+    }, this);
+  };
+
+  /** No perspective chosen yet: the interactive quadrant legend is the landing state. */
+  App.prototype._showIntro = function () {
+    this.activeScenario = null;
+    this._previewKey = null;
+    this._showBlocks(['quadrant']);
+    this.diagram.showLegend();
+    this.diagramHint.classList.remove('hidden');
+    this.resultTypeBlock.classList.add('hidden');
+  };
+
+  App.prototype._handlePerspective = function (key) {
+    this.activeScenario = null;
+    this._previewKey = null;
+
+    if (key === 'dv') {
+      // The DV perspective is where the framework explainer lives now.
+      this._showBlocks(['aboutDv', 'quadrant']);
+      this.diagram.showLegend();
+      this.diagramHint.classList.remove('hidden');
+      this.resultTypeBlock.classList.add('hidden');
+      return;
+    }
+
+    this._showIntro();
+  };
+
+  App.prototype._handleDrill = function (kind, key) {
+    this.activeScenario = null;
+
+    if (kind === 'dv') {
+      var relationship = KDQ.getRelationship(key);
+      this._showBlocks(['quadrant']);
+      this.diagramHint.classList.add('hidden');
+      this.diagram.reveal(relationship);
+      this.resultTypeBlock.classList.remove('hidden');
+      this.resultTitle.textContent = relationship.title;
+      this.resultText.textContent = KDQ.i18n.tr(relationship.text);
+      return;
+    }
+
+    this._renderMarkerBlock(key);
+    this._showBlocks(['marker']);
+  };
+
+  App.prototype._renderMarkerBlock = function (code) {
+    var marker = KDQ.getMarker(code);
+    this.markerBlockBody.innerHTML = '';
+
+    var title = document.createElement('p');
+    title.className = 'marker-block-title';
+    title.textContent = code + ' — ' + marker.label;
+    this.markerBlockBody.appendChild(title);
+
+    var definition = document.createElement('p');
+    definition.className = 'understand-text';
+    definition.textContent = KDQ.i18n.tr(marker.definition);
+    this.markerBlockBody.appendChild(definition);
+
+    // Which DV types this marker actually shows up in — the research
+    // angle a marker-first reader is usually after.
+    var counts = {};
+    var order = [];
+    KDQ.getScenarios().forEach(function (scenario) {
+      var codes = [scenario.primaryMarker].concat(scenario.secondaryMarkers || []);
+      if (codes.indexOf(code) === -1) return;
+      var key = scenario.resultKey || 'none';
+      if (!counts[key]) { counts[key] = 0; order.push(key); }
+      counts[key] += 1;
+    });
+
+    if (!order.length) return;
+
+    var heading = document.createElement('p');
+    heading.className = 'understand-panel-heading';
+    heading.textContent = KDQ.i18n.t('markerBlock.dvHeading');
+    this.markerBlockBody.appendChild(heading);
+
+    order.forEach(function (key) {
+      var relationship = KDQ.getRelationship(key);
+      var row = document.createElement('div');
+      row.className = 'marker-dv-row';
+      row.innerHTML =
+        '<span class="marker-dv-swatch" style="background:' + relationship.color + '"></span>' +
+        '<span class="marker-dv-label">' + relationship.title + '</span>' +
+        '<span class="marker-dv-count">' + counts[key] + '</span>';
+      this.markerBlockBody.appendChild(row);
+    }, this);
+  };
+
+  App.prototype._handleSelectScenario = function (scenario) {
+    this.activeScenario = scenario;
+    this.learnEngine.loadScenario(scenario);
+    this.stageCaseName.textContent = KDQ.i18n.tr(scenario.name);
+    this._showBlocks(['stage']);
+    this._switchStage('understand');
+  };
+
+  /** A marker inside a case was clicked: pivot the left column to that marker. */
+  App.prototype._handleMarkerLink = function (code) {
+    this.navigator.showMarker(code);
+  };
+
+  /** A legend line/dot/label was clicked on the idle quadrant — preview its explanation. */
   App.prototype._handleLegendPreview = function (relationshipKey) {
     this._previewKey = relationshipKey;
-
     var relationship = KDQ.getRelationship(relationshipKey);
     this.resultTypeBlock.classList.remove('hidden');
     this.resultTitle.textContent = relationship.title;
     this.resultText.textContent = KDQ.i18n.tr(relationship.text);
   };
 
-  App.prototype.showResult = function (relationshipKey, meta) {
-    this._activeRelationshipKey = relationshipKey;
-    this._activeMeta = meta;
-    this._previewKey = null;
+  // ---- Bloom stages ----
 
-    var relationship = KDQ.getRelationship(relationshipKey);
+  App.prototype._switchStage = function (activeKey) {
+    this.activeStage = activeKey;
 
-    this.questionView.classList.add('hidden');
-    this.relevanceViewEl.classList.add('hidden');
-    this.relevanceResultView.classList.add('hidden');
-    this.resultView.classList.remove('hidden');
+    this.stages.forEach(function (stage) {
+      var isActive = stage.key === activeKey;
+      stage.content.classList.toggle('hidden', !isActive);
+      stage.btn.classList.toggle('active', isActive);
+    });
 
-    // A result always reveals in the quadrant, regardless of which
-    // tab (and therefore which right-column panel) was active before.
-    this._hideAllRightPanels();
-    this.quadrantPanel.classList.remove('hidden');
+    this._renderActiveStage();
+  };
 
-    this.answerSummary.render(meta);
-    this.resultTypeBlock.classList.remove('hidden');
-    this.resultTitle.textContent = relationship.title;
-    this.resultText.textContent = KDQ.i18n.tr(relationship.text);
-    this.diagramHint.classList.add('hidden');
+  App.prototype._renderActiveStage = function () {
+    if (!this.activeScenario) return;
 
-    this.diagram.reveal(relationship);
-
-    // Only a researched scenario has a rationale + risk markers to show,
-    // so the third column only appears for that path.
-    var showThirdColumn = meta.source === 'scenario';
-    this.layoutEl.classList.toggle('three-col', showThirdColumn);
-    this.markersPanelSection.classList.toggle('hidden', !showThirdColumn);
-
-    // The relevance check is scenario-only too — the manual quiz has no markers to derive it from.
-    if (meta.source === 'scenario') {
-      this.relevanceEngine.loadScenario(meta.scenario);
-      this.relevanceIntro.classList.toggle('hidden', !this.relevanceEngine.hasQuestions());
+    if (this.activeStage === 'understand') {
+      this.understandView.render(this.activeScenario);
+    } else if (this.activeStage === 'learn') {
+      this.learnView.render();
     } else {
-      this.relevanceIntro.classList.add('hidden');
+      // Extract reads whatever Learn has so far, so it is always built fresh on open.
+      this.extractView.render(this.learnEngine);
     }
   };
 
-  App.prototype._startRelevanceCheck = function () {
-    this.resultView.classList.add('hidden');
-    this.relevanceViewEl.classList.remove('hidden');
-    this.relevanceIntro.classList.add('hidden');
-    this.relevanceEngine.index = 0;
-    this.relevanceView.render();
-  };
-
-  App.prototype._finishRelevanceCheck = function () {
-    var average = this.relevanceEngine.average();
-    var band = KDQ.getRelevanceBand(average);
-
-    this.relevanceSummary.innerHTML = '';
-
-    var gaugeWrap = document.createElement('div');
-    gaugeWrap.className = 'relevance-gauge-wrap';
-    gaugeWrap.appendChild(KDQ.buildRelevanceGauge(average));
-
-    var label = document.createElement('p');
-    label.className = 'relevance-gauge-label';
-    label.textContent = KDQ.i18n.t(band.labelKey);
-    gaugeWrap.appendChild(label);
-
-    this.relevanceSummary.appendChild(gaugeWrap);
-
-    var text = document.createElement('p');
-    text.className = 'relevance-score-text';
-    text.textContent = KDQ.i18n.t(band.textKey);
-    this.relevanceSummary.appendChild(text);
-
-    this.relevanceSummary.appendChild(this._buildMarkerBreakdown());
-
-    this.relevanceViewEl.classList.add('hidden');
-    this.relevanceResultView.classList.remove('hidden');
-  };
-
-  /** Small bar-per-marker breakdown shown below the gauge — how each marker scored on its own. */
-  App.prototype._buildMarkerBreakdown = function () {
-    var wrap = document.createElement('div');
-    wrap.className = 'relevance-marker-breakdown';
-
-    var heading = document.createElement('p');
-    heading.className = 'relevance-marker-heading';
-    heading.textContent = KDQ.i18n.t('relevance.perMarkerHeading');
-    wrap.appendChild(heading);
-
-    this.relevanceEngine.perMarkerScores().forEach(function (item) {
-      var marker = KDQ.getMarker(item.markerCode);
-      var band = KDQ.getRelevanceBand(item.average);
-
-      var row = document.createElement('div');
-      row.className = 'relevance-marker-row';
-
-      var top = document.createElement('div');
-      top.className = 'relevance-marker-top';
-      top.innerHTML =
-        '<span class="relevance-marker-label">' + item.markerCode + ' — ' + marker.label + '</span>' +
-        '<span class="relevance-marker-value">' + item.average.toFixed(1) + ' / 5</span>';
-      row.appendChild(top);
-
-      var track = document.createElement('div');
-      track.className = 'relevance-marker-track';
-      var fill = document.createElement('div');
-      fill.className = 'relevance-marker-fill';
-      fill.style.width = ((item.average - 1) / 4 * 100) + '%';
-      fill.style.background = band.color;
-      track.appendChild(fill);
-      row.appendChild(track);
-
-      wrap.appendChild(row);
-    });
-
-    return wrap;
-  };
-
-  App.prototype._backToCaseResult = function () {
-    this.relevanceResultView.classList.add('hidden');
-    this.relevanceViewEl.classList.add('hidden');
-    this.resultView.classList.remove('hidden');
-    if (this.relevanceEngine.hasQuestions()) this.relevanceIntro.classList.remove('hidden');
-  };
-
-  /** Switches between the homepage tabs (Overview / Scenarios / About DV / About the data). */
-  App.prototype._switchTab = function (activeKey) {
-    this.tabs.forEach(function (tab) {
-      var isActive = tab.key === activeKey;
-      tab.content.classList.toggle('hidden', !isActive);
-      tab.btn.classList.toggle('active', isActive);
-    });
-    this._updateRightColumn(activeKey);
-  };
-
-  App.prototype._hideAllRightPanels = function () {
-    var self = this;
-    Object.keys(this.rightPanels).forEach(function (key) {
-      self.rightPanels[key].classList.add('hidden');
-    });
-  };
-
-  /**
-   * Right column mirrors the active left-column tab: Scenarios shows
-   * the scenario list, About DV / About the data show their own
-   * content panel, and Overview (no entry in rightPanels) falls back
-   * to the quadrant. showResult()
-   * overrides this back to the quadrant regardless.
-   */
-  App.prototype._updateRightColumn = function (activeKey) {
-    var target = this.rightPanels[activeKey] || null;
-    this._hideAllRightPanels();
-    if (target) target.classList.remove('hidden');
-    this.quadrantPanel.classList.toggle('hidden', !!target);
-  };
-
-  /** Called when a risk-marker tag on a scenario result is clicked: leave the result, land on Scenarios pre-filtered to that marker. */
-  App.prototype._goToFilteredScenarios = function (code) {
-    this.restart();
-    this.scenarioBrowser.filterByMarker(code);
-    this._switchTab('scenarios');
+  App.prototype._showDataset = function () {
+    this._showBlocks(['dataset']);
   };
 
   App.prototype.restart = function () {
-    this._activeRelationshipKey = null;
-    this._activeMeta = null;
-    this._previewKey = null;
-
-    this.engine.reset();
-    this.scenarioBrowser.reset();
-    this.diagram.showLegend();
-    this.resultView.classList.add('hidden');
-    this.relevanceViewEl.classList.add('hidden');
-    this.relevanceResultView.classList.add('hidden');
-    this.relevanceIntro.classList.add('hidden');
-    this.questionView.classList.remove('hidden');
-    this.resultTypeBlock.classList.add('hidden');
-    this.diagramHint.classList.remove('hidden');
-    this.layoutEl.classList.remove('three-col');
-    this.markersPanelSection.classList.add('hidden');
-    this._switchTab('overview');
-    this.quizView.render();
+    this.navigator.reset();
+    this._showIntro();
   };
 
   App.prototype._applyDocumentStrings = function () {
@@ -357,16 +279,13 @@
 
   App.prototype._handleLanguageChange = function () {
     this._applyDocumentStrings();
-    this.scenarioBrowser.refresh();
+    this.navigator.refresh();
 
-    if (this._activeRelationshipKey) {
-      // Re-render the currently shown result in the new language — this
-      // also resets any in-progress relevance check back to the case result.
-      this.showResult(this._activeRelationshipKey, this._activeMeta);
+    if (this.activeScenario) {
+      this.stageCaseName.textContent = KDQ.i18n.tr(this.activeScenario.name);
+      this._renderActiveStage();
     } else if (this._previewKey) {
       this._handleLegendPreview(this._previewKey);
-    } else {
-      this.quizView.render();
     }
   };
 

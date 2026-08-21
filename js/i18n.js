@@ -41,7 +41,7 @@
       listeners.push(fn);
     },
 
-    /** Static UI string by key from data/strings.js, e.g. i18n.t('nav.next'). */
+    /** Static UI string by key from data/strings.js, e.g. i18n.t('stage.learn'). */
     t: function (key) {
       var entry = KDQ.STRINGS[key];
       if (!entry) return key;
